@@ -1,0 +1,57 @@
+<ion-header class="clinic-header">
+  <ion-toolbar>
+    <ion-title>Blocked Dates: {{ doctorName }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="clinic-card" style="padding: 0;">
+    <div *ngIf="isLoading()" style="padding: var(--space-4);">
+      <ion-skeleton-text animated style="width: 100%; height: 40px;"></ion-skeleton-text>
+      <ion-skeleton-text animated style="width: 100%; height: 40px; margin-top: 8px;"></ion-skeleton-text>
+    </div>
+
+    <div *ngIf="!isLoading() && blockedDates().length === 0" style="padding: var(--space-8); text-align: center;">
+      <p style="color: var(--clinic-gray-400);">No blocked dates set.</p>
+    </div>
+
+    <div class="blocked-list" *ngIf="!isLoading() && blockedDates().length > 0">
+      <div *ngFor="let date of blockedDates()" class="blocked-item">
+        <div class="date-info">
+          <h4>{{ date.date | date:'mediumDate' }}</h4>
+          <p>{{ date.reason || 'No reason provided' }}</p>
+        </div>
+        <ion-button fill="clear" color="danger" (click)="removeDate(date.id)">
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+  </div>
+
+  <div class="add-form">
+    <h3 style="margin-top: 0; font-size: var(--text-lg); font-weight: 600;">Add Blocked Date</h3>
+    
+    <ion-item class="clinic-input-item" lines="none">
+      <ion-label position="stacked">Select Date</ion-label>
+      <ion-datetime-button datetime="blocked-date-picker"></ion-datetime-button>
+      <ion-modal [keepContentsMounted]="true">
+        <ng-template>
+          <ion-datetime id="blocked-date-picker" presentation="date" [(ngModel)]="newDate"></ion-datetime>
+        </ng-template>
+      </ion-modal>
+    </ion-item>
+
+    <ion-item class="clinic-input-item" lines="none">
+      <ion-label position="stacked">Reason</ion-label>
+      <ion-input [(ngModel)]="newReason" placeholder="e.g. Conference, Vacation"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" (click)="addDate()">
+      <ion-icon slot="start" name="add-outline"></ion-icon>
+      Add Blocked Date
+    </ion-button>
+  </div>
+</ion-content>

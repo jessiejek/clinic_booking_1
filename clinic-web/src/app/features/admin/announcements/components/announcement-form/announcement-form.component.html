@@ -1,0 +1,36 @@
+<ion-header class="clinic-header">
+  <ion-toolbar>
+    <ion-title>{{ announcement ? 'Edit' : 'New' }} Announcement</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Cancel</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="annForm" (ngSubmit)="onSubmit()">
+    <ion-item class="clinic-input-item" lines="none">
+      <ion-label position="stacked">Title</ion-label>
+      <ion-input formControlName="title" placeholder="e.g. Holiday Notice"></ion-input>
+    </ion-item>
+
+    <ion-item class="clinic-input-item" lines="none">
+      <ion-label position="stacked">Body Content</ion-label>
+      <ion-textarea formControlName="body" rows="6" placeholder="Write your announcement here..."></ion-textarea>
+    </ion-item>
+
+    <ion-item class="clinic-input-item" lines="none">
+      <ion-label position="stacked">Image URL (Optional)</ion-label>
+      <ion-input formControlName="imageUrl" placeholder="https://..."></ion-input>
+    </ion-item>
+
+    <ion-item lines="none" style="margin-bottom: var(--space-6);">
+      <ion-label>Active Announcement</ion-label>
+      <ion-toggle formControlName="isActive" slot="end" color="primary"></ion-toggle>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" [disabled]="annForm.invalid || isSubmitting">
+      {{ isSubmitting ? 'Saving...' : (announcement ? 'Update' : 'Post') }} Announcement
+    </ion-button>
+  </form>
+</ion-content>

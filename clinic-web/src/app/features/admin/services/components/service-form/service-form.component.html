@@ -1,0 +1,37 @@
+<ion-header class="clinic-header">
+  <ion-toolbar>
+    <ion-title>{{ service ? 'Edit' : 'Add' }} Service</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Cancel</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="serviceForm" (ngSubmit)="onSubmit()">
+    <ion-item class="clinic-input-item" lines="none">
+      <ion-label position="stacked">Service Name</ion-label>
+      <ion-input formControlName="name" placeholder="e.g. General Consultation"></ion-input>
+    </ion-item>
+
+    <ion-item class="clinic-input-item" lines="none">
+      <ion-label position="stacked">Description</ion-label>
+      <ion-textarea formControlName="description" rows="3" placeholder="What is this service for?"></ion-textarea>
+    </ion-item>
+
+    <div style="display: flex; gap: var(--space-4);">
+      <ion-item class="clinic-input-item" lines="none" style="flex: 1;">
+        <ion-label position="stacked">Duration (mins)</ion-label>
+        <ion-input type="number" formControlName="estimatedDurationMinutes"></ion-input>
+      </ion-item>
+      <ion-item class="clinic-input-item" lines="none" style="flex: 1;">
+        <ion-label position="stacked">Price (₱)</ion-label>
+        <ion-input type="number" formControlName="price"></ion-input>
+      </ion-item>
+    </div>
+
+    <ion-button expand="block" type="submit" [disabled]="serviceForm.invalid || isSubmitting" style="margin-top: var(--space-6);">
+      {{ isSubmitting ? 'Saving...' : (service ? 'Update' : 'Create') }} Service
+    </ion-button>
+  </form>
+</ion-content>

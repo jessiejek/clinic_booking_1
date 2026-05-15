@@ -1,0 +1,67 @@
+<ion-header class="clinic-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="clinic-page-title">Services</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="solid" color="primary" (click)="openServiceForm()">
+        <ion-icon slot="start" name="add-outline"></ion-icon>
+        Add Service
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Skeleton Loading -->
+  <div *ngIf="isLoading()">
+    <ion-card class="clinic-card" *ngFor="let item of [1,2,3]">
+      <div style="display: flex; justify-content: space-between;">
+        <div style="flex: 1;">
+          <ion-skeleton-text animated style="width: 60%; height: 18px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 40%; height: 14px; margin-top: 8px;"></ion-skeleton-text>
+        </div>
+        <ion-skeleton-text animated style="width: 60px; height: 24px; border-radius: 4px;"></ion-skeleton-text>
+      </div>
+    </ion-card>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading() && services().length === 0">
+    <ion-icon name="clipboard-outline" class="empty-state__icon"></ion-icon>
+    <h3 class="empty-state__title">No services yet</h3>
+    <p class="empty-state__message">Configure the medical services offered by your clinic.</p>
+    <ion-button fill="solid" (click)="openServiceForm()">Add First Service</ion-button>
+  </div>
+
+  <!-- Service List -->
+  <ion-list lines="none" *ngIf="!isLoading() && services().length > 0">
+    <ion-card class="clinic-card service-card animate-in" *ngFor="let service of services(); let i = index" [style.animation-delay]="i * 50 + 'ms'">
+      <div class="service-row">
+        <div class="service-info">
+          <h3 class="service-name">{{ service.name }}</h3>
+          <p class="service-desc" *ngIf="service.description">{{ service.description }}</p>
+          <div class="service-meta">
+            <ion-chip outline color="primary">
+              <ion-icon name="time-outline"></ion-icon>
+              <ion-label>{{ service.estimatedDurationMinutes }} mins</ion-label>
+            </ion-chip>
+          </div>
+        </div>
+        
+        <div class="service-right">
+          <div class="service-price">{{ service.price | peso }}</div>
+          <div class="service-actions">
+            <ion-button fill="clear" color="primary" (click)="openServiceForm(service)">
+              <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" color="danger" (click)="confirmDelete(service)">
+              <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+      </div>
+    </ion-card>
+  </ion-list>
+</ion-content>

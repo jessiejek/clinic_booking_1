@@ -1,0 +1,43 @@
+<ion-header class="clinic-header">
+  <ion-toolbar>
+    <ion-title>Schedule: {{ doctorName }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Cancel</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="schedule-list">
+    <div *ngFor="let day of days; let i = index" class="day-row" [class.inactive]="!schedules[i].isActive">
+      <ion-checkbox [(ngModel)]="schedules[i].isActive"></ion-checkbox>
+      <div class="day-label">{{ day.label }}</div>
+      
+      <div class="time-inputs" *ngIf="schedules[i].isActive">
+        <ion-datetime-button [datetime]="'start-' + i"></ion-datetime-button>
+        <ion-modal [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime [id]="'start-' + i" presentation="time" [(ngModel)]="schedules[i].startTime"></ion-datetime>
+          </ng-template>
+        </ion-modal>
+
+        <span>to</span>
+
+        <ion-datetime-button [datetime]="'end-' + i"></ion-datetime-button>
+        <ion-modal [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime [id]="'end-' + i" presentation="time" [(ngModel)]="schedules[i].endTime"></ion-datetime>
+          </ng-template>
+        </ion-modal>
+      </div>
+      
+      <div class="time-inputs" *ngIf="!schedules[i].isActive" style="color: var(--clinic-gray-400); font-style: italic;">
+        No clinic hours
+      </div>
+    </div>
+  </div>
+
+  <ion-button expand="block" (click)="onSubmit()" [disabled]="isSubmitting" style="margin-top: var(--space-6);">
+    {{ isSubmitting ? 'Saving...' : 'Save Schedule' }}
+  </ion-button>
+</ion-content>

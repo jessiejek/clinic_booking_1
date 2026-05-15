@@ -1,0 +1,83 @@
+<ion-header class="clinic-header">
+  <ion-toolbar>
+    <ion-title>{{ doctor ? 'Edit' : 'Add' }} Doctor</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Cancel</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="doctorForm" (ngSubmit)="onSubmit()">
+    <ion-item class="clinic-input-item" lines="none">
+      <ion-label position="stacked">Full Name</ion-label>
+      <ion-input formControlName="fullName" placeholder="e.g. Dr. Maria Santos"></ion-input>
+    </ion-item>
+
+    <ion-item class="clinic-input-item" lines="none">
+      <ion-label position="stacked">Specialization</ion-label>
+      <ion-input formControlName="specialization" placeholder="e.g. General Practitioner"></ion-input>
+    </ion-item>
+
+    <ion-item class="clinic-input-item" lines="none">
+      <ion-label position="stacked">Bio</ion-label>
+      <ion-textarea formControlName="bio" rows="3" placeholder="Brief background..."></ion-textarea>
+    </ion-item>
+
+    <div style="display: flex; gap: var(--space-4);">
+      <ion-item class="clinic-input-item" lines="none" style="flex: 1;">
+        <ion-label position="stacked">Consultation Fee (₱)</ion-label>
+        <ion-input type="number" formControlName="consultationFee"></ion-input>
+      </ion-item>
+      <ion-item class="clinic-input-item" lines="none" style="flex: 1;">
+        <ion-label position="stacked">Status</ion-label>
+        <ion-select formControlName="status">
+          <ion-select-option value="Active">Active</ion-select-option>
+          <ion-select-option value="Inactive">Inactive</ion-select-option>
+          <ion-select-option value="OnLeave">On Leave</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </div>
+
+    <div style="display: flex; gap: var(--space-4);">
+      <ion-item class="clinic-input-item" lines="none" style="flex: 1;">
+        <ion-label position="stacked">Slot Duration (mins)</ion-label>
+        <ion-select formControlName="slotDurationMinutes">
+          <ion-select-option [value]="15">15 mins</ion-select-option>
+          <ion-select-option [value]="30">30 mins</ion-select-option>
+          <ion-select-option [value]="45">45 mins</ion-select-option>
+          <ion-select-option [value]="60">60 mins</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item class="clinic-input-item" lines="none" style="flex: 1;">
+        <ion-label position="stacked">Slot Capacity</ion-label>
+        <ion-input type="number" formControlName="slotCapacity"></ion-input>
+      </ion-item>
+    </div>
+
+    <ion-item class="clinic-input-item" lines="none">
+      <ion-label position="stacked">Daily Patient Limit</ion-label>
+      <ion-input type="number" formControlName="dailyPatientLimit"></ion-input>
+    </ion-item>
+
+    <div style="display: flex; gap: var(--space-4);">
+      <ion-item class="clinic-input-item" lines="none" style="flex: 1;">
+        <ion-label position="stacked">License Number</ion-label>
+        <ion-input formControlName="licenseNumber"></ion-input>
+      </ion-item>
+      <ion-item class="clinic-input-item" lines="none" style="flex: 1;">
+        <ion-label position="stacked">PTR Number</ion-label>
+        <ion-input formControlName="ptrNumber"></ion-input>
+      </ion-item>
+    </div>
+
+    <ion-item class="clinic-input-item" lines="none">
+      <ion-label position="stacked">S2 Number (Optional)</ion-label>
+      <ion-input formControlName="s2Number"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" [disabled]="doctorForm.invalid || isSubmitting" style="margin-top: var(--space-6);">
+      {{ isSubmitting ? 'Saving...' : (doctor ? 'Update' : 'Create') }} Doctor
+    </ion-button>
+  </form>
+</ion-content>

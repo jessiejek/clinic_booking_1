@@ -1,0 +1,58 @@
+.ann-card {
+  margin: 0 0 var(--space-4) 0;
+  padding: var(--space-4);
+}
+
+.ann-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-2);
+
+  .ann-title {
+    margin: 0;
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--clinic-gray-900);
+    flex: 1;
+    margin-right: var(--space-4);
+  }
+}
+
+.ann-body {
+  margin: 0 0 var(--space-4) 0;
+  font-size: var(--text-base);
+  color: var(--clinic-gray-600);
+  line-height: 1.5;
+}
+
+.ann-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--clinic-border);
+  padding-top: var(--space-2);
+
+  .ann-date {
+    font-size: var(--text-xs);
+    color: var(--clinic-gray-400);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    ion-icon {
+      font-size: 14px;
+    }
+  }
+
+  .ann-actions {
+    display: flex;
+    gap: 2px;
+
+    ion-button {
+      --padding-start: 8px;
+      --padding-end: 8px;
+      margin: 0;
+    }
+  }
+}

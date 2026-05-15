@@ -1,0 +1,62 @@
+<ion-header class="clinic-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="clinic-page-title">Announcements</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="solid" color="primary" (click)="openAnnouncementForm()">
+        <ion-icon slot="start" name="add-outline"></ion-icon>
+        New Announcement
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Skeleton -->
+  <div *ngIf="isLoading()">
+    <ion-card class="clinic-card" *ngFor="let item of [1,2]">
+      <ion-skeleton-text animated style="width: 70%; height: 20px;"></ion-skeleton-text>
+      <ion-skeleton-text animated style="width: 100%; height: 14px; margin-top: 8px;"></ion-skeleton-text>
+      <ion-skeleton-text animated style="width: 90%; height: 14px; margin-top: 4px;"></ion-skeleton-text>
+    </ion-card>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading() && announcements().length === 0">
+    <ion-icon name="megaphone-outline" class="empty-state__icon"></ion-icon>
+    <h3 class="empty-state__title">No announcements</h3>
+    <p class="empty-state__message">Keep your patients informed about clinic updates and news.</p>
+    <ion-button fill="solid" (click)="openAnnouncementForm()">Create First Announcement</ion-button>
+  </div>
+
+  <!-- List -->
+  <ion-list lines="none" *ngIf="!isLoading() && announcements().length > 0">
+    <ion-card class="clinic-card ann-card animate-in" *ngFor="let ann of announcements(); let i = index" [style.animation-delay]="i * 50 + 'ms'">
+      <div class="ann-header">
+        <h3 class="ann-title">{{ ann.title }}</h3>
+        <span class="badge" [class.badge-confirmed]="ann.isActive" [class.badge-expired]="!ann.isActive">
+          {{ ann.isActive ? 'Active' : 'Inactive' }}
+        </span>
+      </div>
+      
+      <p class="ann-body">{{ ann.body | slice:0:120 }}{{ ann.body.length > 120 ? '...' : '' }}</p>
+      
+      <div class="ann-footer">
+        <span class="ann-date">
+          <ion-icon name="calendar-outline"></ion-icon>
+          {{ ann.createdAt | date:'mediumDate' }}
+        </span>
+        <div class="ann-actions">
+          <ion-button fill="clear" color="primary" (click)="openAnnouncementForm(ann)">
+            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="danger" (click)="confirmDelete(ann)">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+    </ion-card>
+  </ion-list>
+</ion-content>

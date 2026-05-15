@@ -1,0 +1,163 @@
+<ion-header class="clinic-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="clinic-page-title">Clinic Settings</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="solid" color="primary" (click)="onSave()" [disabled]="isSaving() || isLoading()">
+        <ion-icon slot="start" name="save-outline"></ion-icon>
+        Save Settings
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div *ngIf="isLoading()" class="ion-padding text-center">
+    <ion-spinner color="primary"></ion-spinner>
+    <p>Loading settings...</p>
+  </div>
+
+  <form [formGroup]="settingsForm" *ngIf="!isLoading()" (ngSubmit)="onSave()">
+    <ion-accordion-group [multiple]="true" [value]="['info', 'branding']">
+      
+      <!-- Clinic Info -->
+      <ion-accordion value="info">
+        <ion-item slot="header" color="light">
+          <ion-icon slot="start" name="business-outline" color="primary"></ion-icon>
+          <ion-label>Clinic Information</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-item class="clinic-input-item" lines="none">
+            <ion-label position="stacked">Clinic Name</ion-label>
+            <ion-input formControlName="clinicName"></ion-input>
+          </ion-item>
+          <ion-item class="clinic-input-item" lines="none">
+            <ion-label position="stacked">Full Address</ion-label>
+            <ion-textarea formControlName="address" rows="2"></ion-textarea>
+          </ion-item>
+          <div class="grid-2">
+            <ion-item class="clinic-input-item" lines="none">
+              <ion-label position="stacked">Phone Number</ion-label>
+              <ion-input formControlName="phone"></ion-input>
+            </ion-item>
+            <ion-item class="clinic-input-item" lines="none">
+              <ion-label position="stacked">Email Address</ion-label>
+              <ion-input type="email" formControlName="email"></ion-input>
+            </ion-item>
+          </div>
+          <div class="grid-2">
+            <ion-item class="clinic-input-item" lines="none">
+              <ion-label position="stacked">Facebook URL</ion-label>
+              <ion-input formControlName="facebookUrl" placeholder="https://facebook.com/..."></ion-input>
+            </ion-item>
+            <ion-item class="clinic-input-item" lines="none">
+              <ion-label position="stacked">Instagram URL</ion-label>
+              <ion-input formControlName="instagramUrl" placeholder="https://instagram.com/..."></ion-input>
+            </ion-item>
+          </div>
+        </div>
+      </ion-accordion>
+
+      <!-- Branding -->
+      <ion-accordion value="branding">
+        <ion-item slot="header" color="light">
+          <ion-icon slot="start" name="brush-outline" color="primary"></ion-icon>
+          <ion-label>Branding & Appearance</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-item class="clinic-input-item" lines="none">
+            <ion-label position="stacked">Logo URL</ion-label>
+            <ion-input formControlName="logoUrl" placeholder="https://..."></ion-input>
+          </ion-item>
+          <div class="grid-2">
+            <ion-item class="clinic-input-item" lines="none">
+              <ion-label position="stacked">Primary Color</ion-label>
+              <div class="color-picker-wrapper">
+                <input type="color" formControlName="primaryColor">
+                <ion-input formControlName="primaryColor"></ion-input>
+              </div>
+            </ion-item>
+            <ion-item class="clinic-input-item" lines="none">
+              <ion-label position="stacked">Secondary Color</ion-label>
+              <div class="color-picker-wrapper">
+                <input type="color" formControlName="secondaryColor">
+                <ion-input formControlName="secondaryColor"></ion-input>
+              </div>
+            </ion-item>
+          </div>
+        </div>
+      </ion-accordion>
+
+      <!-- Booking Settings -->
+      <ion-accordion value="booking">
+        <ion-item slot="header" color="light">
+          <ion-icon slot="start" name="calendar-outline" color="primary"></ion-icon>
+          <ion-label>Booking Rules</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-item class="clinic-input-item" lines="none">
+            <ion-label position="stacked">Cancellation Deadline (Hours)</ion-label>
+            <ion-input type="number" formControlName="cancellationDeadlineHours"></ion-input>
+          </ion-item>
+          
+          <ion-item lines="none">
+            <ion-label>Enable "Pay at Clinic" Mode</ion-label>
+            <ion-toggle formControlName="isPayAtClinicMode" slot="end"></ion-toggle>
+          </ion-item>
+          <p class="field-hint">If enabled, patients can book without upfront payment.</p>
+
+          <ion-item class="clinic-input-item" lines="none" *ngIf="settingsForm.get('isPayAtClinicMode')?.value">
+            <ion-label position="stacked">No-Show Window (Minutes)</ion-label>
+            <ion-input type="number" formControlName="payAtClinicNoShowWindowMinutes"></ion-input>
+          </ion-item>
+        </div>
+      </ion-accordion>
+
+      <!-- Features -->
+      <ion-accordion value="features">
+        <ion-item slot="header" color="light">
+          <ion-icon slot="start" name="settings-outline" color="primary"></ion-icon>
+          <ion-label>Modules & Features</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-item lines="none">
+            <ion-label>Enable Patient Portal</ion-label>
+            <ion-toggle formControlName="patientPortalEnabled" slot="end"></ion-toggle>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label>Enable Vaccination Reminders</ion-label>
+            <ion-toggle formControlName="vaccinationReminderEnabled" slot="end"></ion-toggle>
+          </ion-item>
+        </div>
+      </ion-accordion>
+
+      <!-- Document Templates -->
+      <ion-accordion value="documents">
+        <ion-item slot="header" color="light">
+          <ion-icon slot="start" name="document-text-outline" color="primary"></ion-icon>
+          <ion-label>Document Templates</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-item class="clinic-input-item" lines="none">
+            <ion-label position="stacked">Global Document Header (HTML)</ion-label>
+            <ion-textarea formControlName="documentHeaderHtml" rows="4" placeholder="<div style='text-align: center;'>..."></ion-textarea>
+          </ion-item>
+          <ion-item class="clinic-input-item" lines="none">
+            <ion-label position="stacked">Global Document Footer (HTML)</ion-label>
+            <ion-textarea formControlName="documentFooterHtml" rows="4"></ion-textarea>
+          </ion-item>
+        </div>
+      </ion-accordion>
+
+    </ion-accordion-group>
+
+    <div class="ion-padding-top">
+      <ion-button expand="block" type="submit" [disabled]="settingsForm.invalid || isSaving()">
+        <ion-icon slot="start" name="save-outline"></ion-icon>
+        {{ isSaving() ? 'Saving Changes...' : 'Save All Settings' }}
+      </ion-button>
+    </div>
+  </form>
+</ion-content>

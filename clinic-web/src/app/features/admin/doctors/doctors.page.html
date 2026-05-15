@@ -1,0 +1,78 @@
+<ion-header class="clinic-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="clinic-page-title">Doctors</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="solid" color="primary" (click)="openDoctorForm()">
+        <ion-icon slot="start" name="add-outline"></ion-icon>
+        Add Doctor
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Skeleton Loading -->
+  <div *ngIf="isLoading()">
+    <ion-card class="clinic-card" *ngFor="let item of [1,2,3]">
+      <div class="doctor-card-content">
+        <ion-avatar slot="start">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </ion-avatar>
+        <div class="doctor-info">
+          <ion-skeleton-text animated style="width: 50%; height: 20px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 30%; height: 14px; margin-top: 8px;"></ion-skeleton-text>
+        </div>
+      </div>
+    </ion-card>
+  </div>
+
+  <div class="empty-state" *ngIf="!isLoading() && doctors().length === 0">
+    <ion-icon name="medical-outline" class="empty-state__icon"></ion-icon>
+    <h3 class="empty-state__title">No doctors yet</h3>
+    <p class="empty-state__message">Add the first doctor to get started with managing your clinic staff.</p>
+    <ion-button fill="solid" (click)="openDoctorForm()">Add First Doctor</ion-button>
+  </div>
+
+  <!-- Doctor List -->
+  <ion-list lines="none" *ngIf="!isLoading() && doctors().length > 0">
+    <ion-card class="clinic-card doctor-card animate-in" *ngFor="let doctor of doctors(); let i = index" [style.animation-delay]="i * 50 + 'ms'">
+      <div class="doctor-card-content">
+        <ion-avatar slot="start" class="doctor-avatar">
+          <img [src]="doctor.profilePhotoUrl || 'assets/placeholder-doctor.png'" 
+               onerror="this.src='https://ionicframework.com/docs/img/demos/avatar.svg'" />
+        </ion-avatar>
+        
+        <div class="doctor-info">
+          <div class="doctor-header">
+            <h2 class="doctor-name">{{ doctor.fullName }}</h2>
+            <span class="badge" [ngClass]="getStatusClass(doctor.status)">{{ doctor.status }}</span>
+          </div>
+          <p class="doctor-specialization">{{ doctor.specialization }}</p>
+          <div class="doctor-meta">
+            <span class="fee">Fee: {{ doctor.consultationFee | peso }}</span>
+            <span class="dot">·</span>
+            <span class="duration">{{ doctor.slotDurationMinutes }} mins</span>
+          </div>
+        </div>
+
+        <div class="doctor-actions">
+          <ion-button fill="clear" color="medium" (click)="openScheduleForm(doctor)">
+            <ion-icon slot="icon-only" name="calendar-outline"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="medium" (click)="openBlockedDates(doctor)">
+            <ion-icon slot="icon-only" name="ban-outline"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="primary" (click)="openDoctorForm(doctor)">
+            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="danger" (click)="confirmDelete(doctor)">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+    </ion-card>
+  </ion-list>
+</ion-content>

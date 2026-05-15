@@ -1,0 +1,30 @@
+<ion-header class="clinic-header">
+  <ion-toolbar>
+    <ion-title>Add Staff Member</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Cancel</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <p style="color: var(--clinic-gray-600); margin-bottom: var(--space-6); font-size: var(--text-sm);">
+    An invitation email will be sent to the staff member to set their password once they are added.
+  </p>
+
+  <form [formGroup]="staffForm" (ngSubmit)="onSubmit()">
+    <ion-item class="clinic-input-item" lines="none">
+      <ion-label position="stacked">Full Name</ion-label>
+      <ion-input formControlName="fullName" placeholder="e.g. Juan dela Cruz"></ion-input>
+    </ion-item>
+
+    <ion-item class="clinic-input-item" lines="none">
+      <ion-label position="stacked">Email Address</ion-label>
+      <ion-input type="email" formControlName="email" placeholder="e.g. juan@clinic.ph"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" [disabled]="staffForm.invalid || isSubmitting" style="margin-top: var(--space-6);">
+      {{ isSubmitting ? 'Creating...' : 'Add Staff Member' }}
+    </ion-button>
+  </form>
+</ion-content>

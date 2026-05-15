@@ -1,0 +1,74 @@
+<ion-header class="clinic-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="clinic-page-title">Clinic Staff</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="solid" color="primary" (click)="openStaffForm()">
+        <ion-icon slot="start" name="add-outline"></ion-icon>
+        Add Staff
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Skeleton -->
+  <div *ngIf="isLoading()">
+    <ion-card class="clinic-card" *ngFor="let item of [1,2]">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <ion-skeleton-text animated style="width: 48px; height: 48px; border-radius: 50%;"></ion-skeleton-text>
+        <div style="flex: 1;">
+          <ion-skeleton-text animated style="width: 40%; height: 18px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 25%; height: 14px; margin-top: 8px;"></ion-skeleton-text>
+        </div>
+      </div>
+    </ion-card>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading() && staff().length === 0">
+    <ion-icon name="person-circle-outline" class="empty-state__icon"></ion-icon>
+    <h3 class="empty-state__title">No staff accounts</h3>
+    <p class="empty-state__message">Create accounts for your clinic administrators and receptionists.</p>
+    <ion-button fill="solid" (click)="openStaffForm()">Create Staff Account</ion-button>
+  </div>
+
+  <!-- Staff List -->
+  <ion-list lines="none" *ngIf="!isLoading() && staff().length > 0">
+    <ion-card class="clinic-card staff-card animate-in" *ngFor="let member of staff(); let i = index" [style.animation-delay]="i * 50 + 'ms'">
+      <div class="staff-row">
+        <div class="staff-main">
+          <div class="staff-avatar-placeholder">
+            <ion-icon name="person-circle-outline"></ion-icon>
+          </div>
+          <div class="staff-info">
+            <h3 class="staff-name">{{ member.fullName }}</h3>
+            <p class="staff-email">
+              <ion-icon name="mail-outline"></ion-icon>
+              {{ member.email }}
+            </p>
+            <div class="staff-meta">
+              <span class="badge" [class.badge-success]="member.isActive" [class.badge-expired]="!member.isActive">
+                {{ member.isActive ? 'Active' : 'Inactive' }}
+              </span>
+              <span class="join-date">Joined {{ member.createdAt | date:'mediumDate' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="staff-actions">
+          <ion-button fill="outline" size="small" *ngIf="member.isActive" (click)="resendInvite(member.id)">
+            <ion-icon slot="start" name="refresh-outline"></ion-icon>
+            Resend Invite
+          </ion-button>
+          <ion-button fill="clear" color="danger" *ngIf="member.isActive" (click)="confirmDeactivate(member)">
+            <ion-icon slot="start" name="power-outline"></ion-icon>
+            Deactivate
+          </ion-button>
+        </div>
+      </div>
+    </ion-card>
+  </ion-list>
+</ion-content>

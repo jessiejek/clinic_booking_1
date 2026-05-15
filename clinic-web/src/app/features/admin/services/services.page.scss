@@ -1,0 +1,85 @@
+.service-card {
+  margin: 0 0 var(--space-4) 0;
+  padding: var(--space-4);
+}
+
+.service-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.service-info {
+  flex: 1;
+
+  .service-name {
+    margin: 0 0 4px 0;
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--clinic-gray-900);
+  }
+
+  .service-desc {
+    margin: 0 0 var(--space-2) 0;
+    font-size: var(--text-sm);
+    color: var(--clinic-gray-600);
+    line-height: 1.4;
+  }
+
+  ion-chip {
+    margin: 0;
+    height: 24px;
+    font-size: var(--text-xs);
+    --padding-start: 8px;
+    --padding-end: 8px;
+
+    ion-icon {
+      font-size: 14px;
+    }
+  }
+}
+
+.service-right {
+  text-align: right;
+
+  .service-price {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--clinic-primary);
+    margin-bottom: var(--space-2);
+  }
+
+  .service-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 2px;
+
+    ion-button {
+      --padding-start: 8px;
+      --padding-end: 8px;
+      margin: 0;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .service-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .service-right {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--clinic-border);
+    padding-top: var(--space-2);
+    margin-top: var(--space-2);
+
+    .service-price {
+      margin-bottom: 0;
+    }
+  }
+}
