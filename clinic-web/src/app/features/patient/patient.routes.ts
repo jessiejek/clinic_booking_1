@@ -20,6 +20,14 @@ export const PATIENT_ROUTES: Routes = [
         loadComponent: () => import('./portal/portal.page').then(m => m.PortalPage) // Placeholder
       },
       {
+        path: 'prescriptions',
+        loadComponent: () => import('./portal/portal.page').then(m => m.PortalPage) // Placeholder
+      },
+      {
+        path: 'receipts',
+        loadComponent: () => import('./portal/portal.page').then(m => m.PortalPage) // Placeholder
+      },
+      {
         path: 'profile',
         loadComponent: () => import('./portal/portal.page').then(m => m.PortalPage) // Placeholder
       },

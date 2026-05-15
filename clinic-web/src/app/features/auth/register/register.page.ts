@@ -56,12 +56,12 @@ export class RegisterPage {
       }).subscribe({
         next: () => {
           this.isLoading.set(false);
-          this.showToast('Registration successful! Please log in.', 'success');
+          this.showToast('Registration successful!', 'success');
           this.navCtrl.navigateRoot('/auth/login');
         },
         error: (err) => {
           this.isLoading.set(false);
-          this.showToast(err.error?.message || 'Registration failed', 'danger');
+          this.showToast(err.error?.error || 'Registration failed', 'danger');
         }
       });
     }

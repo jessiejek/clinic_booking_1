@@ -13,12 +13,31 @@
   --clinic-gray-400:       #9AA0A6;
   --clinic-gray-600:       #5F6368;
   --clinic-gray-900:       #1C1E21;
+  --clinic-white:          #FFFFFF;
 
   /** Semantic **/
   --clinic-success:        #1A7F5A;
   --clinic-danger:         #D93025;
   --clinic-warning:        #F0A500;
   --clinic-info:           #1A73E8;
+  --clinic-warning-text:   #7A5200;
+  --clinic-text-muted:     var(--clinic-gray-400);
+  --clinic-menu-border:    rgba(255, 255, 255, 0.08);
+  --clinic-menu-text:      rgba(255, 255, 255, 0.75);
+  --clinic-menu-hover:     rgba(255, 255, 255, 0.05);
+  --clinic-focus-ring:     rgba(26, 107, 90, 0.1);
+  --clinic-primary-shadow: rgba(26, 107, 90, 0.3);
+  --clinic-danger-soft:    rgba(217, 48, 37, 0.1);
+  --clinic-badge-pending-bg:   var(--clinic-accent-light);
+  --clinic-badge-pending-text: var(--clinic-warning-text);
+  --clinic-badge-confirmed-bg: var(--clinic-primary-light);
+  --clinic-badge-confirmed-text: var(--clinic-primary);
+  --clinic-badge-completed-bg: #E8F0FE;
+  --clinic-badge-completed-text: #1A5BC2;
+  --clinic-badge-cancelled-bg: #FCE8E6;
+  --clinic-badge-cancelled-text: #C5221F;
+  --clinic-badge-onhold-bg: #FFF3E0;
+  --clinic-badge-onhold-text: #E65100;
 
   /** Surface & Shadow **/
   --clinic-surface:        #FFFFFF;

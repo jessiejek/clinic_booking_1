@@ -47,7 +47,7 @@
 
     &.has-focus {
       border-color: var(--clinic-primary);
-      box-shadow: 0 0 0 3px rgba(26, 107, 90, 0.1);
+      box-shadow: 0 0 0 3px var(--clinic-focus-ring);
     }
   }
 }
@@ -63,14 +63,14 @@
   display: inline-block;
 }
 
-.badge-pending     { background: #FEF6E4; color: #B07C00; }
-.badge-confirmed   { background: #E8F5F2; color: #1A6B5A; }
-.badge-completed   { background: #E8F0FE; color: #1A5BC2; }
-.badge-cancelled   { background: #FCE8E6; color: #C5221F; }
+.badge-pending     { background: var(--clinic-badge-pending-bg); color: var(--clinic-badge-pending-text); }
+.badge-confirmed   { background: var(--clinic-badge-confirmed-bg); color: var(--clinic-badge-confirmed-text); }
+.badge-completed   { background: var(--clinic-badge-completed-bg); color: var(--clinic-badge-completed-text); }
+.badge-cancelled   { background: var(--clinic-badge-cancelled-bg); color: var(--clinic-badge-cancelled-text); }
 .badge-expired     { background: var(--clinic-gray-100); color: var(--clinic-gray-600); }
-.badge-no-show     { background: #FCE8E6; color: #C5221F; }
-.badge-on-hold     { background: #FFF3E0; color: #E65100; }
-.badge-success     { background: #E8F5F2; color: #1A6B5A; }
+.badge-no-show     { background: var(--clinic-badge-cancelled-bg); color: var(--clinic-badge-cancelled-text); }
+.badge-on-hold     { background: var(--clinic-badge-onhold-bg); color: var(--clinic-badge-onhold-text); }
+.badge-success     { background: var(--clinic-badge-confirmed-bg); color: var(--clinic-badge-confirmed-text); }
 
 /* Clinic Card */
 .clinic-card {
@@ -95,7 +95,7 @@ ion-button {
 
 /* Auth Page Background */
 .auth-page-content {
-  --background: #E8F5F2; // subtle teal-wash background
+  --background: var(--clinic-primary-light);
   display: flex;
   align-items: center;
   justify-content: center;

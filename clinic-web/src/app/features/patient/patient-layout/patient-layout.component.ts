@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { homeOutline, calendarOutline, documentTextOutline, personOutline } from 'ionicons/icons';
+import { homeOutline, calendarOutline, documentTextOutline, personOutline, receiptOutline, medicalOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-patient-layout',
@@ -27,6 +27,16 @@ import { homeOutline, calendarOutline, documentTextOutline, personOutline } from
         <ion-tab-button tab="records" routerLink="/portal/records" routerLinkActive="tab-selected">
           <ion-icon name="document-text-outline"></ion-icon>
           <ion-label>Records</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="prescriptions" routerLink="/portal/prescriptions" routerLinkActive="tab-selected">
+          <ion-icon name="medical-outline"></ion-icon>
+          <ion-label>Prescriptions</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="receipts" routerLink="/portal/receipts" routerLinkActive="tab-selected">
+          <ion-icon name="receipt-outline"></ion-icon>
+          <ion-label>Receipts</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="profile" routerLink="/portal/profile" routerLinkActive="tab-selected">
@@ -64,6 +74,6 @@ import { homeOutline, calendarOutline, documentTextOutline, personOutline } from
 })
 export class PatientLayoutComponent {
   constructor() {
-    addIcons({ homeOutline, calendarOutline, documentTextOutline, personOutline });
+    addIcons({ homeOutline, calendarOutline, documentTextOutline, medicalOutline, receiptOutline, personOutline });
   }
 }

@@ -4,7 +4,7 @@ import { IonicModule, ToastController } from '@ionic/angular';
 import { AuthStore } from '../../../core/stores/auth.store';
 import { RouterModule } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { logOutOutline } from 'ionicons/icons';
+import { logOutOutline, notificationsOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-patient-portal',
@@ -21,7 +21,7 @@ export class PortalPage {
   showBanner = signal(true);
 
   constructor() {
-    addIcons({ logOutOutline });
+    addIcons({ logOutOutline, notificationsOutline });
   }
 
   get firstName() {

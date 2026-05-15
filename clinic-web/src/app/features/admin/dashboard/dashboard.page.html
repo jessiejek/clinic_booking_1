@@ -4,14 +4,17 @@
       <ion-buttons slot="start">
         <ion-menu-button></ion-menu-button>
       </ion-buttons>
-      <ion-title class="clinic-page-title">Dashboard</ion-title>
+      <ion-title>
+        <div class="font-display">Clinic System</div>
+        <div class="role-label">Admin</div>
+      </ion-title>
       <ion-buttons slot="end">
         <ion-button fill="clear">
           <ion-icon name="notifications-outline"></ion-icon>
         </ion-button>
-        <ion-avatar class="user-avatar">
-          <img src="https://ionicframework.com/docs/img/demos/avatar.svg" />
-        </ion-avatar>
+        <ion-button (click)="logout()">
+          <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+        </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>

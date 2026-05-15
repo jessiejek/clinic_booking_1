@@ -55,7 +55,7 @@ export const AuthStore = signalStore(
               error: (err: any) => {
                 patchState(store, { 
                   isLoading: false, 
-                  error: err.error?.message || 'Login failed' 
+                  error: err.error?.error || 'Login failed' 
                 });
               }
             })
@@ -89,7 +89,7 @@ export const AuthStore = signalStore(
           router.navigate(['/admin/dashboard']);
           break;
         case 'Staff':
-          router.navigate(['/admin/dashboard']);
+          router.navigate(['/staff/dashboard']);
           break;
         case 'Doctor':
           router.navigate(['/doctor/dashboard']);

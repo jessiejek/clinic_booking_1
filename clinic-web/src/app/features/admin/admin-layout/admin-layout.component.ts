@@ -76,14 +76,14 @@ import {
 
     .menu-logo {
       padding: var(--space-8) var(--space-6);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid var(--clinic-menu-border);
       margin-bottom: var(--space-4);
     }
 
     .menu-logo__name {
       font-family: var(--font-display);
       font-size: var(--text-2xl);
-      color: #FFFFFF;
+      color: var(--clinic-white);
     }
 
     .menu-logo__tagline {
@@ -96,7 +96,7 @@ import {
 
     ion-menu ion-item {
       --background: transparent;
-      --color: rgba(255,255,255,0.7);
+      --color: var(--clinic-menu-text);
       --padding-start: var(--space-4);
       --inner-padding-end: var(--space-4);
       border-radius: 12px;
@@ -107,13 +107,13 @@ import {
 
       &.active {
         --background: var(--clinic-primary);
-        --color: #FFFFFF;
-        box-shadow: 0 4px 12px rgba(26, 107, 90, 0.3);
+        --color: var(--clinic-white);
+        box-shadow: 0 4px 12px var(--clinic-primary-shadow);
       }
 
       &:hover:not(.active) {
-        --background: rgba(255,255,255,0.05);
-        --color: #FFFFFF;
+        --background: var(--clinic-menu-hover);
+        --color: var(--clinic-white);
       }
 
       ion-icon {
@@ -132,7 +132,7 @@ import {
       margin-top: var(--space-4);
       
       &:hover {
-        --background: rgba(217, 48, 37, 0.1);
+        --background: var(--clinic-danger-soft);
       }
     }
   `]

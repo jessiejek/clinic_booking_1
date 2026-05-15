@@ -1,7 +1,13 @@
 <ion-header class="clinic-header">
   <ion-toolbar>
-    <ion-title class="clinic-page-title font-display">Patient Portal</ion-title>
+    <ion-title>
+      <div class="font-display">Clinic System</div>
+      <div class="role-label">Patient</div>
+    </ion-title>
     <ion-buttons slot="end">
+      <ion-button fill="clear">
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
       <ion-button (click)="logout()">
         <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
       </ion-button>
@@ -12,23 +18,21 @@
 <ion-content style="--background: var(--clinic-surface-alt)">
   @if (user()?.isEmailVerified === false && showBanner()) {
     <div class="verification-banner">
-      <div class="banner-content">
-        <p>Your email address is not verified. Some features may be limited.</p>
-        <div class="banner-actions">
-          <ion-button fill="clear" size="small" (click)="resendVerification()">
-            Resend Email
-          </ion-button>
-          <ion-button fill="clear" size="small" (click)="dismissBanner()">
-            Dismiss
-          </ion-button>
-        </div>
+      <p>Your email address is not verified. Some features may be limited.</p>
+      <div class="banner-actions">
+        <ion-button fill="clear" size="small" (click)="resendVerification()">
+          Resend Email
+        </ion-button>
+        <ion-button fill="clear" size="small" (click)="dismissBanner()">
+          Dismiss
+        </ion-button>
       </div>
     </div>
   }
 
   <div class="ion-padding">
     <div class="welcome-section animate-in">
-      <h2 class="font-display">Hello, {{ firstName }}!</h2>
+      <h2 class="font-display">Welcome back, {{ firstName }}</h2>
       <p>Welcome to your clinic portal.</p>
     </div>
 

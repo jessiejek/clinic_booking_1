@@ -24,7 +24,7 @@ export class AuthService {
       if (!user || request.password !== expectedPassword) {
         return throwError(() => ({ 
           status: 401, 
-          error: { message: 'Invalid email or password' } 
+          error: { error: 'Invalid email or password' } 
         }));
       }
 
@@ -40,6 +40,12 @@ export class AuthService {
 
   register(request: RegisterRequest): Observable<AuthResponse> {
     if (environment.useMocks) {
+      if (MOCK_USERS[request.email]) {
+        return throwError(() => ({
+          status: 409,
+          error: { error: 'Email already in use' }
+        }));
+      }
       // Simulate successful registration
       const newUser: AuthUser = {
         id: crypto.randomUUID(),
