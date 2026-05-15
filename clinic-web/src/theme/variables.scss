@@ -1,0 +1,79 @@
+// --- Clinic Design System Tokens ---
+:root {
+  /** Brand Colors **/
+  --clinic-primary:        #1A6B5A;   // deep teal
+  --clinic-primary-light:  #E8F5F2;   // teal tint
+  --clinic-accent:         #F0A500;   // amber
+  --clinic-accent-light:   #FEF6E4;   // amber tint
+
+  /** Neutrals **/
+  --clinic-gray-50:        #F8F9FA;
+  --clinic-gray-100:       #F1F3F4;
+  --clinic-gray-200:       #E8EAED;
+  --clinic-gray-400:       #9AA0A6;
+  --clinic-gray-600:       #5F6368;
+  --clinic-gray-900:       #1C1E21;
+
+  /** Semantic **/
+  --clinic-success:        #1A7F5A;
+  --clinic-danger:         #D93025;
+  --clinic-warning:        #F0A500;
+  --clinic-info:           #1A73E8;
+
+  /** Surface & Shadow **/
+  --clinic-surface:        #FFFFFF;
+  --clinic-surface-alt:    #F8F9FA;
+  --clinic-border:         #E8EAED;
+  --clinic-shadow:         0 1px 3px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+  --clinic-shadow-md:      0 4px 16px rgba(0,0,0,0.10);
+
+  /** Typography **/
+  --font-body:    'DM Sans', sans-serif;
+  --font-display: 'DM Serif Display', serif;
+
+  --text-xs:   0.75rem;   // 12px
+  --text-sm:   0.875rem;  // 14px
+  --text-base: 1rem;      // 16px
+  --text-lg:   1.125rem;  // 18px
+  --text-xl:   1.25rem;   // 20px
+  --text-2xl:  1.5rem;    // 24px
+  --text-3xl:  1.875rem;  // 30px
+
+  --font-weight-normal:   400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+
+  /** Spacing **/
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /** Ionic Overrides **/
+  --ion-color-primary: var(--clinic-primary);
+  --ion-color-primary-rgb: 26, 107, 90;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #175e4f;
+  --ion-color-primary-tint: #317a6a;
+
+  --ion-font-family: var(--font-body);
+  --ion-background-color: var(--clinic-gray-50);
+  --ion-text-color: var(--clinic-gray-900);
+}
+
+// Global reset/base styles
+body {
+  font-family: var(--font-body);
+  color: var(--clinic-gray-900);
+}
+
+.clinic-display-font {
+  font-family: var(--font-display);
+}

@@ -1,0 +1,76 @@
+<ion-content class="auth-page-content">
+  <div class="login-container animate-in">
+    <div class="clinic-card">
+      <div class="header-section">
+        <h1 class="font-display text-teal">Clinic System</h1>
+        <p class="tagline">Providing quality care for every patient.</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="clinic-input-item">
+          <ion-label>Email Address</ion-label>
+          <ion-input
+            type="email"
+            formControlName="email"
+            placeholder="name@clinic.ph"
+          ></ion-input>
+        </div>
+
+        <div class="clinic-input-item">
+          <ion-label>Password</ion-label>
+          <div class="password-input-wrapper">
+            <ion-input
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="••••••••"
+            ></ion-input>
+            <ion-button 
+              fill="clear" 
+              class="toggle-password"
+              (click)="showPassword = !showPassword"
+            >
+              <ion-icon 
+                slot="icon-only" 
+                [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
+              ></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <ion-button 
+            expand="block" 
+            type="submit" 
+            [disabled]="loginForm.invalid || isLoading()"
+          >
+            <ion-spinner *ngIf="isLoading()" name="crescent"></ion-spinner>
+            <span *ngIf="!isLoading()">Sign In</span>
+          </ion-button>
+
+          <div class="links">
+            <a routerLink="/auth/forgot-password">Forgot password?</a>
+          </div>
+        </div>
+      </form>
+
+      <div class="divider">
+        <span>Or continue with</span>
+      </div>
+
+      <div class="social-login">
+        <ion-button expand="block" fill="outline" color="medium" (click)="showSocialToast('Google')">
+          <ion-icon slot="start" name="logo-google"></ion-icon>
+          Google
+        </ion-button>
+        <ion-button expand="block" fill="outline" color="medium" (click)="showSocialToast('Facebook')">
+          <ion-icon slot="start" name="logo-facebook"></ion-icon>
+          Facebook
+        </ion-button>
+      </div>
+
+      <p class="register-link">
+        Don't have an account? <a routerLink="/auth/register">Register</a>
+      </p>
+    </div>
+  </div>
+</ion-content>

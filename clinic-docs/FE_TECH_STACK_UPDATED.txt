@@ -1,0 +1,954 @@
+# CLINIC SYSTEM — FE_TECH_STACK.md
+> Frontend technology decisions, conventions, and patterns. All frontend code must follow this document.
+
+---
+
+## TECH STACK
+
+| Layer | Technology |
+|---|---|
+| Framework | Angular 17 (standalone components) |
+| UI Library | Ionic Angular 7 |
+| Language | TypeScript (strict mode) |
+| Styling | SCSS + Ionic CSS Variables |
+| State Management | Angular Signals (local/component state) + NgRx SignalStore (global shared state) |
+| HTTP | Angular HttpClient + custom ApiService wrapper |
+| Auth Interceptors | `auth.interceptor.ts` (attach JWT) + `refresh.interceptor.ts` (handle 401 + token refresh) |
+| Forms | Angular Reactive Forms |
+| Routing | Angular Router with lazy-loaded standalone routes (`app.routes.ts`) |
+| Icons | Ionicons |
+| Charts | Chart.js (vitals trend charts) |
+| PDF Download | Browser download via blob URL |
+| Package Manager | npm |
+
+---
+
+## MVP-FIRST APPROACH — BUILD FRONTEND WITHOUT BACKEND
+
+**All phases must be built frontend-first using mock data. Do not wait for a backend.**
+
+### Core Rule
+Every service method returns mock data via `of(mockValue)` from RxJS. The component code is identical whether talking to a real API or mock — only the service internals change. When the backend is ready, swap `of(mockData)` for `this.api.get(...)` in the service. Nothing else changes.
+
+### Mock Service Pattern
+
+```typescript
+// features/booking/services/booking.service.ts
+import { Injectable, inject } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
+import { ApiService } from '@core/services/api.service';
+import { Booking, CreateBookingRequest } from '../models/booking.model';
+import { MOCK_BOOKINGS } from '../mocks/booking.mocks';
+import { environment } from '@environments/environment';
+
+@Injectable({ providedIn: 'root' })
+export class BookingService {
+  private api = inject(ApiService);
+
+  getBookings(): Observable<Booking[]> {
+    if (environment.useMocks) {
+      return of(MOCK_BOOKINGS).pipe(delay(400)); // simulate network delay
+    }
+    return this.api.get<Booking[]>('/api/v1/bookings');
+  }
+
+  createBooking(payload: CreateBookingRequest): Observable<Booking> {
+    if (environment.useMocks) {
+      const newBooking: Booking = { ...MOCK_BOOKINGS[0], id: crypto.randomUUID(), ...payload };
+      return of(newBooking).pipe(delay(600));
+    }
+    return this.api.post<Booking>('/api/v1/bookings', payload);
+  }
+}
+```
+
+### Environment Flag
+
+```typescript
+// src/environments/environment.ts
+export const environment = {
+  production: false,
+  useMocks: true,          // ← flip to false when backend is ready
+  apiUrl: 'https://localhost:7001'
+};
+
+// src/environments/environment.prod.ts
+export const environment = {
+  production: true,
+  useMocks: false,
+  apiUrl: 'https://api.yourclinic.com'
+};
+```
+
+### Mock Auth
+
+The `AuthStore` in MVP mode reads from hardcoded mock users. Login page accepts any of the seeded credentials and sets the store state locally — no HTTP call.
+
+```typescript
+// core/mocks/auth.mocks.ts
+export const MOCK_USERS = {
+  admin:   { id: '1', name: 'Admin',        email: 'admin@clinic.ph',      role: 'Admin',   isFirstLogin: false },
+  staff:   { id: '2', name: 'Staff User',   email: 'staff@clinic.ph',      role: 'Staff',   isFirstLogin: false },
+  doctor:  { id: '3', name: 'Dr. Santos',   email: 'dr.santos@clinic.ph',  role: 'Doctor',  isFirstLogin: false },
+  patient: { id: '4', name: 'Juan dela Cruz', email: 'patient@clinic.ph',  role: 'Patient', isFirstLogin: false },
+};
+
+export const MOCK_CREDENTIALS: Record<string, keyof typeof MOCK_USERS> = {
+  'admin@clinic.ph':      'admin',
+  'staff@clinic.ph':      'staff',
+  'dr.santos@clinic.ph':  'doctor',
+  'patient@clinic.ph':    'patient',
+};
+```
+
+### Mock Data Files
+
+Each feature has a `mocks/` folder:
+
+```
+features/booking/
+├── mocks/
+│   └── booking.mocks.ts     ← exported MOCK_BOOKINGS array
+├── booking.page.ts
+└── ...
+```
+
+Mock data must be realistic and cover edge cases: empty states, long names, multiple statuses, maximum field lengths, Philippine locale (₱, dates, names).
+
+### Guard Behavior in MVP Mode
+
+Guards still work — `AuthGuard` checks `AuthStore.isAuthenticated()`. In MVP mode, the store is seeded from `localStorage` after mock login. Role routing works exactly as in production.
+
+---
+
+## DESIGN SYSTEM
+
+### Design Direction
+
+The clinic system uses a **clean, professional medical aesthetic**: trustworthy, calm, and precise. Think modern healthcare SaaS — not sterile hospital forms, but a polished web app a doctor would be proud to use. 
+
+Key qualities: structured whitespace, clear visual hierarchy, confident typography, and purposeful color use. Nothing decorative that does not serve clarity.
+
+### Color Palette
+
+Override Ionic's default colors in `src/theme/variables.scss`:
+
+```scss
+// src/theme/variables.scss
+
+// --- Brand ---
+:root {
+  --clinic-primary:        #1A6B5A;   // deep teal — trust, health
+  --clinic-primary-light:  #E8F5F2;   // teal tint — backgrounds, chips
+  --clinic-accent:         #F0A500;   // amber — CTAs, highlights, warnings
+  --clinic-accent-light:   #FEF6E4;   // amber tint
+
+  // --- Neutrals ---
+  --clinic-gray-50:        #F8F9FA;
+  --clinic-gray-100:       #F1F3F4;
+  --clinic-gray-200:       #E8EAED;
+  --clinic-gray-400:       #9AA0A6;
+  --clinic-gray-600:       #5F6368;
+  --clinic-gray-900:       #1C1E21;
+
+  // --- Semantic ---
+  --clinic-success:        #1A7F5A;
+  --clinic-danger:         #D93025;
+  --clinic-warning:        #F0A500;
+  --clinic-info:           #1A73E8;
+
+  // --- Surface ---
+  --clinic-surface:        #FFFFFF;
+  --clinic-surface-alt:    #F8F9FA;
+  --clinic-border:         #E8EAED;
+  --clinic-shadow:         0 1px 3px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+  --clinic-shadow-md:      0 4px 16px rgba(0,0,0,0.10);
+
+  // --- Ionic overrides ---
+  --ion-color-primary:         var(--clinic-primary);
+  --ion-color-primary-contrast: #FFFFFF;
+  --ion-background-color:      var(--clinic-gray-50);
+  --ion-item-background:       var(--clinic-surface);
+  --ion-border-color:          var(--clinic-border);
+  --ion-text-color:            var(--clinic-gray-900);
+}
+```
+
+### Typography
+
+```scss
+// src/theme/variables.scss (continued)
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap');
+
+:root {
+  --font-body:    'DM Sans', sans-serif;
+  --font-display: 'DM Serif Display', serif;  // used for page titles only
+
+  --text-xs:   0.75rem;   // 12px — labels, badges
+  --text-sm:   0.875rem;  // 14px — secondary text, table cells
+  --text-base: 1rem;      // 16px — body default
+  --text-lg:   1.125rem;  // 18px — card titles
+  --text-xl:   1.25rem;   // 20px — section headings
+  --text-2xl:  1.5rem;    // 24px — page headings
+  --text-3xl:  1.875rem;  // 30px — display/hero
+
+  --font-weight-normal:   400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+}
+
+ion-content, body {
+  font-family: var(--font-body);
+  color: var(--clinic-gray-900);
+}
+```
+
+### Spacing System
+
+Use an 8px base grid. All padding, margin, and gap values must be multiples of 4px (prefer 8px increments):
+
+```scss
+// spacing tokens
+--space-1:  4px;
+--space-2:  8px;
+--space-3:  12px;
+--space-4:  16px;
+--space-5:  20px;
+--space-6:  24px;
+--space-8:  32px;
+--space-10: 40px;
+--space-12: 48px;
+--space-16: 64px;
+```
+
+### Component Design Rules
+
+**Cards**
+```scss
+.clinic-card {
+  background: var(--clinic-surface);
+  border: 1px solid var(--clinic-border);
+  border-radius: 12px;
+  box-shadow: var(--clinic-shadow);
+  padding: var(--space-6);
+}
+```
+
+**Buttons**
+- Primary action: filled teal (`--clinic-primary`), white text, 8px border-radius
+- Secondary action: outlined teal, transparent background
+- Destructive: filled red (`--clinic-danger`)
+- Ghost/text: no border, teal text
+- All buttons: `font-weight: 500`, `letter-spacing: 0.01em`, minimum 44px tap height
+
+**Status Badges**
+```scss
+// Booking status badge colors
+.badge-pending     { background: #FEF6E4; color: #B07C00; }
+.badge-confirmed   { background: #E8F5F2; color: #1A6B5A; }
+.badge-completed   { background: #E8F0FE; color: #1A5BC2; }
+.badge-cancelled   { background: #FCE8E6; color: #C5221F; }
+.badge-expired     { background: var(--clinic-gray-100); color: var(--clinic-gray-600); }
+.badge-no-show     { background: #FCE8E6; color: #C5221F; }
+.badge-on-hold     { background: #FFF3E0; color: #E65100; }
+```
+
+**Forms**
+- Labels: `font-size: var(--text-sm)`, `font-weight: 500`, `color: var(--clinic-gray-600)`, 6px bottom margin
+- Inputs: 1px border `var(--clinic-border)`, 8px border-radius, 12px padding, 16px font-size
+- Focus: border-color `var(--clinic-primary)`, subtle teal box-shadow
+- Error: border-color `var(--clinic-danger)`, error message in red below input
+- Never use Ionic's default item underline style — always use the boxed input style
+
+**Tables / Lists**
+- Header row: `background: var(--clinic-gray-50)`, `font-size: var(--text-xs)`, `font-weight: 600`, uppercase, letter-spacing
+- Row height: minimum 56px
+- Row hover: `background: var(--clinic-gray-50)`
+- Dividers: 1px `var(--clinic-border)`
+
+**Page Layout**
+- All pages use a consistent header with page title (left) + primary action button (right)
+- Content padding: 16px (mobile), 24px (tablet+)
+- Max content width: 960px, centered
+- Sidebar/menu width: 260px
+
+### Page Header Pattern
+
+Every page must use this header structure:
+
+```html
+<!-- Standard page header -->
+<ion-header class="clinic-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button *ngIf="showBack"></ion-back-button>
+      <ion-menu-button *ngIf="!showBack"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="clinic-page-title">{{ pageTitle }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="solid" color="primary" *ngIf="primaryAction" (click)="onPrimaryAction()">
+        <ion-icon slot="start" [name]="primaryActionIcon"></ion-icon>
+        {{ primaryActionLabel }}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+```
+
+```scss
+.clinic-header ion-toolbar {
+  --background: var(--clinic-surface);
+  --border-color: var(--clinic-border);
+  --padding-start: var(--space-4);
+  --padding-end: var(--space-4);
+}
+
+.clinic-page-title {
+  font-family: var(--font-body);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--clinic-gray-900);
+}
+```
+
+### Side Menu Design
+
+```scss
+ion-menu ion-content {
+  --background: var(--clinic-gray-900);
+}
+
+.menu-logo {
+  padding: var(--space-6) var(--space-4);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.menu-logo__name {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  color: #FFFFFF;
+}
+
+.menu-logo__tagline {
+  font-size: var(--text-xs);
+  color: var(--clinic-gray-400);
+  margin-top: 2px;
+}
+
+ion-menu ion-item {
+  --background: transparent;
+  --color: rgba(255,255,255,0.72);
+  --padding-start: var(--space-4);
+  border-radius: 8px;
+  margin: 2px var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+ion-menu ion-item.active,
+ion-menu ion-item:hover {
+  --background: rgba(255,255,255,0.08);
+  --color: #FFFFFF;
+}
+
+ion-menu ion-item.active {
+  --background: var(--clinic-primary);
+  --color: #FFFFFF;
+}
+```
+
+### Empty States
+
+Every list/table page must have a designed empty state — not a blank page:
+
+```html
+<div class="empty-state" *ngIf="!isLoading() && items().length === 0">
+  <ion-icon [name]="emptyIcon" class="empty-state__icon"></ion-icon>
+  <h3 class="empty-state__title">{{ emptyTitle }}</h3>
+  <p class="empty-state__message">{{ emptyMessage }}</p>
+  <ion-button *ngIf="emptyAction" fill="solid" (click)="onEmptyAction()">
+    {{ emptyActionLabel }}
+  </ion-button>
+</div>
+```
+
+```scss
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-16) var(--space-8);
+  text-align: center;
+
+  &__icon {
+    font-size: 48px;
+    color: var(--clinic-gray-200);
+    margin-bottom: var(--space-4);
+  }
+
+  &__title {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--clinic-gray-600);
+    margin-bottom: var(--space-2);
+  }
+
+  &__message {
+    font-size: var(--text-sm);
+    color: var(--clinic-gray-400);
+    max-width: 300px;
+    line-height: 1.5;
+  }
+}
+```
+
+### Loading States
+
+Use skeleton screens (not spinners) for initial page loads. Use `ion-skeleton-text` for inline skeletons:
+
+```html
+<!-- Skeleton for a booking card -->
+<ion-card *ngIf="isLoading()" class="clinic-card">
+  <ion-skeleton-text animated style="width: 60%; height: 18px; border-radius: 4px;"></ion-skeleton-text>
+  <ion-skeleton-text animated style="width: 40%; height: 14px; border-radius: 4px; margin-top: 8px;"></ion-skeleton-text>
+</ion-card>
+```
+
+Use `ion-loading` (spinner overlay) only for mutation actions (submit, save, delete).
+
+### Animation
+
+Use subtle entrance animations on page load. Apply staggered `animation-delay` to list items:
+
+```scss
+// Global entrance animation
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: fadeInUp 0.25s ease-out both;
+}
+
+// Stagger list items
+ion-list ion-card:nth-child(1) { animation-delay: 0ms; }
+ion-list ion-card:nth-child(2) { animation-delay: 50ms; }
+ion-list ion-card:nth-child(3) { animation-delay: 100ms; }
+ion-list ion-card:nth-child(4) { animation-delay: 150ms; }
+```
+
+Keep all animations under 300ms. No bouncing, no scaling, no color-flash effects in a medical app.
+
+---
+
+## PROJECT STRUCTURE
+
+```
+src/
+└── app/
+    ├── app.component.ts          (standalone root component)
+    ├── app.routes.ts             (root lazy routes)
+    ├── core/
+    │   ├── guards/
+    │   │   ├── auth.guard.ts
+    │   │   ├── role.guard.ts
+    │   │   └── first-login.guard.ts
+    │   ├── interceptors/
+    │   │   ├── auth.interceptor.ts
+    │   │   └── refresh.interceptor.ts
+    │   ├── services/
+    │   │   ├── api.service.ts
+    │   │   ├── auth.service.ts
+    │   │   └── storage.service.ts
+    │   ├── mocks/
+    │   │   └── auth.mocks.ts     ← mock users and credentials
+    │   └── models/
+    │       └── (shared interfaces/types)
+    ├── shared/
+    │   ├── components/
+    │   │   ├── allergy-badge/
+    │   │   ├── booking-status-badge/
+    │   │   ├── loading-spinner/
+    │   │   └── empty-state/
+    │   └── pipes/
+    │       ├── ph-date.pipe.ts
+    │       └── peso.pipe.ts
+    └── features/
+        ├── auth/
+        │   ├── login/
+        │   │   ├── login.page.ts
+        │   │   ├── login.page.html
+        │   │   └── login.page.scss
+        │   ├── register/
+        │   ├── forgot-password/
+        │   ├── reset-password/
+        │   └── set-password/
+        ├── admin/
+        │   ├── dashboard/
+        │   ├── doctors/
+        │   ├── services/
+        │   ├── staff/
+        │   ├── bookings/
+        │   ├── patients/
+        │   ├── announcements/
+        │   └── settings/
+        ├── staff/
+        │   ├── dashboard/
+        │   ├── walk-in/
+        │   ├── bookings/
+        │   └── patients/
+        ├── doctor/
+        │   ├── dashboard/
+        │   ├── schedule/
+        │   ├── patients/
+        │   └── consultations/
+        └── patient/
+            ├── portal/
+            ├── booking/
+            ├── my-bookings/
+            ├── my-records/
+            ├── my-prescriptions/
+            ├── my-receipts/
+            └── my-profile/
+```
+
+Each feature folder that uses mocks adds:
+
+```
+features/booking/
+├── mocks/
+│   └── booking.mocks.ts
+├── booking.page.ts
+├── booking.page.html
+└── booking.page.scss
+```
+
+---
+
+## PAGE FILE CONVENTION
+
+Every page follows the `.page.ts / .page.html / .page.scss` naming convention:
+
+```
+features/booking/
+├── booking.page.ts
+├── booking.page.html
+└── booking.page.scss
+```
+
+Sub-components within a feature (not full pages) use `.component.ts / .component.html / .component.scss`:
+
+```
+features/booking/
+├── booking.page.ts
+├── booking.page.html
+├── booking.page.scss
+└── components/
+    ├── slot-grid/
+    │   ├── slot-grid.component.ts
+    │   ├── slot-grid.component.html
+    │   └── slot-grid.component.scss
+    └── booking-summary-bar/
+        ├── booking-summary-bar.component.ts
+        └── ...
+```
+
+---
+
+## STANDALONE COMPONENT CONVENTION
+
+Every component and page is standalone. No NgModule files anywhere.
+
+```typescript
+// booking.page.ts
+import { Component, OnInit, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
+import { RouterModule } from '@angular/router';
+
+@Component({
+  standalone: true,
+  selector: 'app-booking',
+  templateUrl: './booking.page.html',
+  styleUrls: ['./booking.page.scss'],
+  imports: [CommonModule, IonicModule, RouterModule]
+})
+export class BookingPage implements OnInit {
+  isLoading = signal(false);
+  bookings = signal<Booking[]>([]);
+
+  ngOnInit() { ... }
+}
+```
+
+---
+
+## ROUTING CONVENTION
+
+```typescript
+// app.routes.ts — root routes with lazy loading
+export const routes: Routes = [
+  {
+    path: '',
+    redirectTo: 'auth/login',
+    pathMatch: 'full'
+  },
+  {
+    path: 'auth',
+    loadChildren: () => import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES)
+  },
+  {
+    path: 'admin',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Admin'] },
+    loadChildren: () => import('./features/admin/admin.routes').then(m => m.ADMIN_ROUTES)
+  },
+  {
+    path: 'staff',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Staff'] },
+    loadChildren: () => import('./features/staff/staff.routes').then(m => m.STAFF_ROUTES)
+  },
+  {
+    path: 'doctor',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Doctor'] },
+    loadChildren: () => import('./features/doctor/doctor.routes').then(m => m.DOCTOR_ROUTES)
+  },
+  {
+    path: 'portal',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Patient'] },
+    loadChildren: () => import('./features/patient/patient.routes').then(m => m.PATIENT_ROUTES)
+  },
+  {
+    path: 'book',
+    loadChildren: () => import('./features/patient/booking/booking.routes').then(m => m.BOOKING_ROUTES)
+  }
+];
+```
+
+---
+
+## API SERVICE WRAPPER
+
+```typescript
+// core/services/api.service.ts
+@Injectable({ providedIn: 'root' })
+export class ApiService {
+  private readonly baseUrl = environment.apiUrl;
+
+  constructor(private http: HttpClient) {}
+
+  get<T>(endpoint: string, params?: HttpParams): Observable<T> {
+    return this.http.get<T>(`${this.baseUrl}${endpoint}`, { params });
+  }
+
+  post<T>(endpoint: string, body: unknown): Observable<T> {
+    return this.http.post<T>(`${this.baseUrl}${endpoint}`, body);
+  }
+
+  put<T>(endpoint: string, body: unknown): Observable<T> {
+    return this.http.put<T>(`${this.baseUrl}${endpoint}`, body);
+  }
+
+  delete<T>(endpoint: string): Observable<T> {
+    return this.http.delete<T>(`${this.baseUrl}${endpoint}`);
+  }
+}
+```
+
+Feature services inject `ApiService`, never `HttpClient` directly. In MVP mode, services return `of(mockData)` — same return type, same interface.
+
+---
+
+## HTTP INTERCEPTORS
+
+### auth.interceptor.ts
+- Attaches `Authorization: Bearer {accessToken}` to every outgoing request
+- Skips public endpoints (login, register, public doctors, public services, announcements)
+- In MVP mode: still runs, token is a fake string from AuthStore — harmless
+
+```typescript
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const authService = inject(AuthService);
+  const token = authService.getAccessToken();
+
+  if (token) {
+    req = req.clone({
+      setHeaders: { Authorization: `Bearer ${token}` }
+    });
+  }
+
+  return next(req);
+};
+```
+
+### refresh.interceptor.ts
+- Intercepts `401 Unauthorized` responses
+- Calls `POST /api/v1/auth/refresh` with the stored refresh token
+- If refresh succeeds: retries original request with new access token
+- If refresh fails: logs user out, redirects to login
+- In MVP mode: 401 never fires (mocks don't make real HTTP calls)
+
+---
+
+## STATE MANAGEMENT
+
+### Angular Signals — local/component state
+
+```typescript
+export class BookingPage {
+  selectedSlot = signal<TimeSlot | null>(null);
+  isSubmitting = signal(false);
+  availableSlots = signal<TimeSlot[]>([]);
+
+  totalFee = computed(() => this.selectedSlot()?.fee ?? 0);
+}
+```
+
+### NgRx SignalStore — global shared state
+
+```typescript
+// core/stores/auth.store.ts
+export const AuthStore = signalStore(
+  { providedIn: 'root' },
+  withState({
+    user: null as AuthUser | null,
+    accessToken: null as string | null,
+    isAuthenticated: false,
+  }),
+  withMethods((store, authService = inject(AuthService)) => ({
+    login: rxMethod<LoginRequest>(
+      pipe(
+        switchMap(credentials => authService.login(credentials)),
+        tapResponse({
+          next: (response) => patchState(store, {
+            user: response.user,
+            accessToken: response.accessToken,
+            isAuthenticated: true
+          }),
+          error: console.error
+        })
+      )
+    ),
+    logout() {
+      patchState(store, { user: null, accessToken: null, isAuthenticated: false });
+    }
+  }))
+);
+```
+
+Global stores:
+- `AuthStore` — current user, tokens, role
+- `NotificationStore` — unread count, notification list
+- `ClinicSettingsStore` — clinic name, logo, colors (loaded once on app start)
+
+---
+
+## AUTH GUARDS
+
+```typescript
+// core/guards/auth.guard.ts
+export const AuthGuard: CanActivateFn = () => {
+  const authStore = inject(AuthStore);
+  const router = inject(Router);
+
+  if (!authStore.isAuthenticated()) {
+    router.navigate(['/auth/login']);
+    return false;
+  }
+  return true;
+};
+
+// core/guards/role.guard.ts
+export const RoleGuard: CanActivateFn = (route) => {
+  const authStore = inject(AuthStore);
+  const router = inject(Router);
+  const requiredRoles = route.data['roles'] as string[];
+
+  if (!requiredRoles.includes(authStore.user()?.role ?? '')) {
+    router.navigate(['/unauthorized']);
+    return false;
+  }
+  return true;
+};
+
+// core/guards/first-login.guard.ts
+export const FirstLoginGuard: CanActivateFn = () => {
+  const authStore = inject(AuthStore);
+  const router = inject(Router);
+
+  if (authStore.user()?.isFirstLogin) {
+    router.navigate(['/auth/set-password']);
+    return false;
+  }
+  return true;
+};
+```
+
+---
+
+## IONIC CONVENTIONS
+
+- Use Ionic components for all UI: `ion-header`, `ion-content`, `ion-card`, `ion-list`, `ion-item`, `ion-button`, etc.
+- Use `ion-refresher` for pull-to-refresh on list pages
+- Use `ion-infinite-scroll` for paginated lists
+- Use `ion-loading` for mutation actions only (submit, save, delete)
+- Use skeleton screens (`ion-skeleton-text`) for initial data loads
+- Use `ion-toast` for success/error feedback (not `alert()`)
+- Use `ion-modal` for forms and detail views
+- Use `ion-action-sheet` for multi-option actions (confirm/reject/cancel booking)
+- Always use boxed input style — never Ionic's default underline style
+
+```scss
+// Slot colors for booking grid
+.slot-available  { --background: var(--clinic-gray-50);    color: var(--clinic-gray-600); }
+.slot-pending    { --background: #FEF6E4;                  color: #B07C00; }
+.slot-booked     { --background: #FCE8E6;                  color: #C5221F; }
+.slot-selected   { --background: var(--clinic-primary);    color: #FFFFFF; }
+```
+
+---
+
+## SCSS CONVENTIONS
+
+- Define all design tokens in `src/theme/variables.scss`
+- Never use inline styles
+- Use Ionic CSS custom properties for theming
+- BEM naming for custom classes: `.booking-card__header`, `.booking-card__status`
+- Page-level styles scoped to their `.page.scss` file
+- Never hardcode colors — always reference variables
+
+---
+
+## REACTIVE FORMS CONVENTION
+
+```typescript
+export class BookingPage {
+  private fb = inject(FormBuilder);
+
+  bookingForm = this.fb.group({
+    doctorId:        ['', Validators.required],
+    serviceId:       ['', Validators.required],
+    appointmentDate: ['', Validators.required],
+    slotStartTime:   ['', Validators.required],
+  });
+
+  onSubmit() {
+    if (this.bookingForm.invalid) return;
+    // submit to service
+  }
+}
+```
+
+---
+
+## ERROR HANDLING CONVENTION
+
+```typescript
+// In services — let errors propagate
+createBooking(payload: CreateBookingRequest): Observable<Booking> {
+  if (environment.useMocks) {
+    return of({ ...MOCK_BOOKINGS[0], ...payload }).pipe(delay(600));
+  }
+  return this.api.post<Booking>('/api/v1/bookings', payload);
+}
+
+// In components — catch and display via ion-toast
+this.bookingService.createBooking(payload).subscribe({
+  next: () => {
+    this.showToast('Booking created successfully', 'success');
+    this.router.navigate(['/portal/my-bookings']);
+  },
+  error: (err) => {
+    this.showToast(err.error?.error ?? 'Something went wrong', 'danger');
+  }
+});
+```
+
+---
+
+## ENVIRONMENT CONFIG
+
+```typescript
+// src/environments/environment.ts
+export const environment = {
+  production: false,
+  useMocks: true,
+  apiUrl: 'https://localhost:7001'
+};
+
+// src/environments/environment.prod.ts
+export const environment = {
+  production: true,
+  useMocks: false,
+  apiUrl: 'https://api.yourclinic.com'
+};
+```
+
+---
+
+## SHARED PIPES
+
+```typescript
+// shared/pipes/peso.pipe.ts
+// Usage: {{ 500 | peso }} → ₱500.00
+
+// shared/pipes/ph-date.pipe.ts
+// Usage: {{ date | phDate }} → Jan 15, 2025
+```
+
+---
+
+## PATIENT PORTAL PAGES
+
+| Route | Page | Description |
+|---|---|---|
+| `/portal` | portal/portal.page | Home — upcoming booking, announcements |
+| `/portal/my-bookings` | my-bookings.page | All bookings with status, cancel option |
+| `/portal/my-records` | my-records.page | Read-only consultations, diagnoses, vitals charts |
+| `/portal/my-prescriptions` | my-prescriptions.page | Prescriptions list + PDF download |
+| `/portal/my-receipts` | my-receipts.page | Payment receipts + visit summaries + PDF download |
+| `/portal/my-profile` | my-profile.page | Editable profile fields |
+| `/book` | booking/booking.page | Public booking flow (doctor discovery → slot → payment proof) |
+
+---
+
+## NAMING CONVENTIONS SUMMARY
+
+| Type | Convention | Example |
+|---|---|---|
+| Pages | `feature.page.ts` | `booking.page.ts` |
+| Components | `feature.component.ts` | `slot-grid.component.ts` |
+| Services | `feature.service.ts` | `booking.service.ts` |
+| Stores | `feature.store.ts` | `auth.store.ts` |
+| Guards | `name.guard.ts` | `auth.guard.ts` |
+| Interceptors | `name.interceptor.ts` | `auth.interceptor.ts` |
+| Pipes | `name.pipe.ts` | `peso.pipe.ts` |
+| Mocks | `feature.mocks.ts` | `booking.mocks.ts` |
+| Interfaces | PascalCase, no `I` prefix | `Booking`, `Doctor`, `TimeSlot` |
+| Enums | PascalCase | `BookingStatus`, `PaymentMode` |
+| Signals | camelCase | `isLoading`, `selectedSlot` |
+
+---
+
+## MVP TRANSITION CHECKLIST
+
+When backend is ready, flip `useMocks: false` in `environment.ts` and verify each service:
+
+- [ ] `AuthService.login()` — real JWT flow
+- [ ] `AuthService.refresh()` — refresh token rotation
+- [ ] `BookingService` — all methods
+- [ ] `DoctorService` — all methods
+- [ ] `PatientService` — all methods
+- [ ] `ConsultationService` — all methods
+- [ ] `PrescriptionService` — all methods
+- [ ] `NotificationService` — all methods
+- [ ] `ClinicSettingsService` — all methods
+- [ ] `PaymentService` — all methods
+- [ ] Remove `mocks/` folders after confirming integration

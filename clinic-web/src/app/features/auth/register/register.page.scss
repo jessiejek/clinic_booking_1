@@ -1,0 +1,39 @@
+.register-container {
+  width: 100%;
+  max-width: 440px;
+  padding: var(--space-4);
+}
+
+.header-section {
+  text-align: center;
+  margin-bottom: var(--space-8);
+
+  h1 {
+    font-size: var(--text-2xl);
+    margin: 0;
+  }
+
+  .tagline {
+    color: var(--clinic-gray-600);
+    font-size: var(--text-sm);
+    margin-top: var(--space-1);
+  }
+}
+
+.form-actions {
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-6);
+}
+
+.login-link {
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--clinic-gray-600);
+  margin: 0;
+
+  a {
+    color: var(--clinic-primary);
+    text-decoration: none;
+    font-weight: 600;
+  }
+}

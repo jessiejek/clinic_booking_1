@@ -1,0 +1,66 @@
+<ion-content class="auth-page-content">
+  <div class="register-container animate-in">
+    <div class="clinic-card">
+      <div class="header-section">
+        <h1 class="font-display text-teal">Create Account</h1>
+        <p class="tagline">Join our clinic to manage your bookings.</p>
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="clinic-input-item">
+          <ion-label>Full Name</ion-label>
+          <ion-input
+            type="text"
+            formControlName="fullName"
+            placeholder="Juan dela Cruz"
+          ></ion-input>
+        </div>
+
+        <div class="clinic-input-item">
+          <ion-label>Email Address</ion-label>
+          <ion-input
+            type="email"
+            formControlName="email"
+            placeholder="name@example.com"
+          ></ion-input>
+        </div>
+
+        <div class="clinic-input-item">
+          <ion-label>Password</ion-label>
+          <ion-input
+            type="password"
+            formControlName="password"
+            placeholder="Minimum 8 characters"
+          ></ion-input>
+        </div>
+
+        <div class="clinic-input-item">
+          <ion-label>Confirm Password</ion-label>
+          <ion-input
+            type="password"
+            formControlName="confirmPassword"
+            placeholder="Re-type password"
+          ></ion-input>
+          <ion-note color="danger" *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched">
+            Passwords do not match
+          </ion-note>
+        </div>
+
+        <div class="form-actions">
+          <ion-button 
+            expand="block" 
+            type="submit" 
+            [disabled]="registerForm.invalid || isLoading()"
+          >
+            <ion-spinner *ngIf="isLoading()" name="crescent"></ion-spinner>
+            <span *ngIf="!isLoading()">Register</span>
+          </ion-button>
+        </div>
+      </form>
+
+      <p class="login-link">
+        Already have an account? <a routerLink="/auth/login">Sign In</a>
+      </p>
+    </div>
+  </div>
+</ion-content>

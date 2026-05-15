@@ -1,0 +1,101 @@
+/* Core Ionic CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+@import "theme/variables.scss";
+
+/** Global Clinic Styles **/
+
+/* Boxed Input Style */
+.clinic-input-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --background: transparent;
+  --border-style: none;
+  margin-bottom: var(--space-4);
+
+  ion-label {
+    font-size: var(--text-sm) !important;
+    font-weight: 500 !important;
+    color: var(--clinic-gray-600) !important;
+    margin-bottom: var(--space-2) !important;
+    transform: none !important;
+  }
+
+  ion-input, ion-textarea, ion-select {
+    --padding-start: var(--space-3) !important;
+    --padding-end: var(--space-3) !important;
+    --padding-top: var(--space-3) !important;
+    --padding-bottom: var(--space-3) !important;
+    border: 1px solid var(--clinic-border);
+    border-radius: 8px;
+    background: var(--clinic-surface);
+    font-size: var(--text-base);
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &.has-focus {
+      border-color: var(--clinic-primary);
+      box-shadow: 0 0 0 3px rgba(26, 107, 90, 0.1);
+    }
+  }
+}
+
+/* Clinic Card */
+.clinic-card {
+  background: var(--clinic-surface);
+  border: 1px solid var(--clinic-border);
+  border-radius: 16px;
+  box-shadow: var(--clinic-shadow-md);
+  padding: var(--space-8);
+}
+
+/* Buttons */
+ion-button {
+  --border-radius: 8px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  margin: 0;
+
+  &.button-solid {
+    --box-shadow: none;
+  }
+}
+
+/* Auth Page Background */
+.auth-page-content {
+  --background: #E8F5F2; // subtle teal-wash background
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Typography Utilities */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.text-teal {
+  color: var(--clinic-primary);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: fadeInUp 0.3s ease-out both;
+}

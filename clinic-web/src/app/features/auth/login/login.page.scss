@@ -1,0 +1,102 @@
+.login-container {
+  width: 100%;
+  max-width: 440px;
+  padding: var(--space-4);
+}
+
+.header-section {
+  text-align: center;
+  margin-bottom: var(--space-8);
+
+  h1 {
+    font-size: var(--text-3xl);
+    margin: 0;
+  }
+
+  .tagline {
+    color: var(--clinic-gray-600);
+    font-size: var(--text-sm);
+    margin-top: var(--space-1);
+  }
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  ion-input {
+    flex: 1;
+  }
+
+  .toggle-password {
+    position: absolute;
+    right: 4px;
+    --color: var(--clinic-gray-400);
+    z-index: 10;
+  }
+}
+
+.form-actions {
+  margin-top: var(--space-6);
+
+  .links {
+    text-align: right;
+    margin-top: var(--space-3);
+    
+    a {
+      font-size: var(--text-sm);
+      color: var(--clinic-primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+  }
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: var(--space-8) 0;
+  color: var(--clinic-gray-400);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  &::before, &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--clinic-border);
+  }
+
+  span {
+    padding: 0 var(--space-3);
+  }
+}
+
+.social-login {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+
+  ion-button {
+    --border-color: var(--clinic-border);
+    --color: var(--clinic-gray-600);
+    font-size: var(--text-sm);
+    text-transform: none;
+  }
+}
+
+.register-link {
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--clinic-gray-600);
+  margin: 0;
+
+  a {
+    color: var(--clinic-primary);
+    text-decoration: none;
+    font-weight: 600;
+  }
+}
