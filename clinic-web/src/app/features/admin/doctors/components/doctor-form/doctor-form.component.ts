@@ -54,7 +54,7 @@ export class DoctorFormComponent implements OnInit {
 
     request.subscribe({
       next: () => {
-        this.showToast(this.doctor ? 'Doctor updated' : 'Doctor created');
+        this.showToast(this.doctor ? 'Doctor updated' : 'Doctor created. Invite email will be sent when backend is connected.');
         this.modalCtrl.dismiss(true);
       },
       error: () => this.isSubmitting = false

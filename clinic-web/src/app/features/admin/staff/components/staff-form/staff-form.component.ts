@@ -36,7 +36,7 @@ export class StaffFormComponent implements OnInit {
     this.isSubmitting = true;
     this.staffService.createStaff(this.staffForm.value).subscribe({
       next: () => {
-        this.showToast('Staff account created. Invite email will be sent.');
+        this.showToast('Staff account created. Invite email will be sent when backend is connected.');
         this.modalCtrl.dismiss(true);
       },
       error: () => this.isSubmitting = false

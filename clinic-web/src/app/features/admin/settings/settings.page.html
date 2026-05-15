@@ -14,9 +14,17 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div *ngIf="isLoading()" class="ion-padding text-center">
-    <ion-spinner color="primary"></ion-spinner>
-    <p>Loading settings...</p>
+  <div *ngIf="isLoading()">
+    <ion-card class="clinic-card">
+      <ion-skeleton-text animated style="width: 40%; height: 20px;"></ion-skeleton-text>
+      <ion-skeleton-text animated style="width: 100%; height: 42px; margin-top: 12px;"></ion-skeleton-text>
+      <ion-skeleton-text animated style="width: 100%; height: 42px; margin-top: 8px;"></ion-skeleton-text>
+    </ion-card>
+    <ion-card class="clinic-card">
+      <ion-skeleton-text animated style="width: 35%; height: 20px;"></ion-skeleton-text>
+      <ion-skeleton-text animated style="width: 100%; height: 42px; margin-top: 12px;"></ion-skeleton-text>
+      <ion-skeleton-text animated style="width: 100%; height: 42px; margin-top: 8px;"></ion-skeleton-text>
+    </ion-card>
   </div>
 
   <form [formGroup]="settingsForm" *ngIf="!isLoading()" (ngSubmit)="onSave()">

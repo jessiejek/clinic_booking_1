@@ -69,7 +69,7 @@ export class SettingsPage implements OnInit {
     this.isSaving.set(true);
     this.settingsService.updateSettings(this.settingsForm.value).subscribe({
       next: () => {
-        this.showToast('Settings saved successfully');
+        this.showToast('Settings saved');
         this.isSaving.set(false);
       },
       error: () => this.isSaving.set(false)

@@ -29,27 +29,27 @@ import {
           </div>
 
           <ion-list lines="none">
-            <ion-item routerLink="/admin/dashboard" routerLinkActive="active">
+            <ion-item routerLink="/admin/dashboard" [routerLinkActive]="'active'">
               <ion-icon slot="start" name="grid-outline"></ion-icon>
               <ion-label>Dashboard</ion-label>
             </ion-item>
-            <ion-item routerLink="/admin/doctors" routerLinkActive="active">
+            <ion-item routerLink="/admin/doctors" [routerLinkActive]="'active'">
               <ion-icon slot="start" name="people-outline"></ion-icon>
               <ion-label>Doctors</ion-label>
             </ion-item>
-            <ion-item routerLink="/admin/services" routerLinkActive="active">
+            <ion-item routerLink="/admin/services" [routerLinkActive]="'active'">
               <ion-icon slot="start" name="medical-outline"></ion-icon>
               <ion-label>Services</ion-label>
             </ion-item>
-            <ion-item routerLink="/admin/staff" routerLinkActive="active">
+            <ion-item routerLink="/admin/staff" [routerLinkActive]="'active'">
               <ion-icon slot="start" name="person-circle-outline"></ion-icon>
               <ion-label>Staff</ion-label>
             </ion-item>
-            <ion-item routerLink="/admin/announcements" routerLinkActive="active">
+            <ion-item routerLink="/admin/announcements" [routerLinkActive]="'active'">
               <ion-icon slot="start" name="megaphone-outline"></ion-icon>
               <ion-label>Announcements</ion-label>
             </ion-item>
-            <ion-item routerLink="/admin/settings" routerLinkActive="active">
+            <ion-item routerLink="/admin/settings" [routerLinkActive]="'active'">
               <ion-icon slot="start" name="settings-outline"></ion-icon>
               <ion-label>Settings</ion-label>
             </ion-item>
