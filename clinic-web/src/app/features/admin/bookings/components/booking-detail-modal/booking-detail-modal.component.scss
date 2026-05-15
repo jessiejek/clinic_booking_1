@@ -1,0 +1,91 @@
+.detail-card, .payment-card {
+  background: var(--clinic-surface);
+  border-radius: 16px;
+  padding: var(--space-6);
+  border: 1px solid var(--clinic-border);
+}
+
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+.queue-id {
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  color: var(--clinic-primary);
+}
+
+.patient-title {
+  margin: 0 0 var(--space-6) 0;
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--clinic-gray-900);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-size: var(--text-xs);
+    color: var(--clinic-gray-400);
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  span {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--clinic-gray-800);
+  }
+}
+
+.mt-4 { margin-top: var(--space-4); }
+
+.payment-card {
+  h3 {
+    margin: 0 0 var(--space-4) 0;
+    font-size: var(--text-base);
+    font-weight: 700;
+  }
+}
+
+.text-success { color: var(--ion-color-success); }
+
+.proof-section {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px dashed var(--clinic-border);
+
+  label {
+    font-size: var(--text-xs);
+    color: var(--clinic-gray-400);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: var(--space-2);
+  }
+}
+
+.proof-placeholder {
+  background: var(--clinic-gray-50);
+  padding: var(--space-3);
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  p { margin: 0; font-size: var(--text-sm); font-weight: 600; }
+}
+
+ion-footer {
+  background: var(--clinic-surface);
+}

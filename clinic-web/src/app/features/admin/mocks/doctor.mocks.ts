@@ -18,6 +18,8 @@ export const MOCK_DOCTORS: Doctor[] = [
     status: 'Active',
     services: [MOCK_SERVICES[0], MOCK_SERVICES[4]],
     averageRating: 4.7,
+    runningLate: true,
+    estimatedDelayMinutes: 15,
   },
   {
     id: '10000000-0000-0000-0000-000000000002',

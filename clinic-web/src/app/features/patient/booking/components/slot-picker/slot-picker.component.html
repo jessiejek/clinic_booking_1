@@ -1,0 +1,25 @@
+<div class="slot-container">
+  <div class="slot-grid">
+    <div 
+      *ngFor="let slot of slots" 
+      [class]="getSlotClass(slot)"
+      (click)="onSlotClick(slot)">
+      {{ slot.startTime }}
+    </div>
+  </div>
+
+  <div class="slot-legend">
+    <div class="legend-item">
+      <div class="legend-box available"></div>
+      <span>Available</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-box pending"></div>
+      <span>Pending</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-box full"></div>
+      <span>Full</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,119 @@
+.filter-chips {
+  display: flex;
+  overflow-x: auto;
+  padding: 0 var(--space-4) var(--space-2) var(--space-4);
+  gap: var(--space-2);
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+
+  ion-chip {
+    margin: 0;
+    flex-shrink: 0;
+  }
+}
+
+.doctor-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2);
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.doctor-card {
+  margin: 0;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.doctor-card-content {
+  display: flex;
+  align-items: center;
+  padding: var(--space-4);
+}
+
+.avatar-wrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--clinic-gray-100);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--clinic-primary);
+  font-size: var(--text-lg);
+}
+
+.doctor-info {
+  flex: 1;
+  padding-left: var(--space-4);
+
+  .name-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .doctor-name {
+    margin: 0;
+    font-size: var(--text-base);
+    font-weight: 700;
+    color: var(--clinic-gray-900);
+  }
+
+  .rating {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--clinic-gray-600);
+    
+    ion-icon {
+      font-size: 14px;
+    }
+  }
+
+  .specialization {
+    margin: 2px 0 6px 0;
+    font-size: var(--text-sm);
+    color: var(--clinic-primary);
+    font-weight: 500;
+  }
+
+  .fee {
+    margin: 0;
+    font-size: var(--text-xs);
+    color: var(--clinic-gray-400);
+  }
+}
+
+.forward-icon {
+  color: var(--clinic-gray-300);
+  margin-left: var(--space-2);
+}

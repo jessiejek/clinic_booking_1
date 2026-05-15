@@ -1,0 +1,42 @@
+<ion-content class="ion-padding ion-text-center">
+  <div class="success-container animate-in">
+    <div class="success-icon">
+      <ion-icon name="checkmark-circle-outline"></ion-icon>
+    </div>
+
+    <h1 class="success-title">Booking Confirmed!</h1>
+    <p class="success-message">
+      Your appointment has been successfully scheduled. 
+      {{ booking()?.paymentMode === 'Online' ? 'We are currently verifying your payment.' : 'Please arrive 15 minutes before your schedule.' }}
+    </p>
+
+    <div class="queue-card animate-in" style="animation-delay: 200ms" *ngIf="booking()?.queueNumber">
+      <span class="queue-label">Your Queue Number</span>
+      <h2 class="queue-number">#{{ booking()?.queueNumber }}</h2>
+    </div>
+
+    <div class="confirmation-details animate-in" style="animation-delay: 300ms">
+      <div class="detail-row">
+        <ion-icon name="person-outline"></ion-icon>
+        <span>{{ booking()?.doctorName }}</span>
+      </div>
+      <div class="detail-row">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <span>{{ formatDate(booking()?.appointmentDate) }}</span>
+      </div>
+      <div class="detail-row">
+        <ion-icon name="time-outline"></ion-icon>
+        <span>{{ booking()?.slotStartTime }} - {{ booking()?.slotEndTime }}</span>
+      </div>
+    </div>
+
+    <div class="action-buttons animate-in" style="animation-delay: 400ms">
+      <ion-button expand="block" fill="solid" (click)="viewMyBookings()">
+        View My Bookings
+      </ion-button>
+      <ion-button expand="block" fill="clear" routerLink="/book/doctors">
+        Book Another Appointment
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

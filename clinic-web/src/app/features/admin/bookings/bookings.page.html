@@ -1,0 +1,101 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="clinic-header">
+    <ion-title class="clinic-page-title">Bookings</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="solid" class="walk-in-btn" (click)="openWalkInModal()">
+        <ion-icon slot="start" name="walk-outline"></ion-icon>
+        Walk-In
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+  <ion-toolbar class="clinic-header">
+    <div class="filters-row">
+      <ion-item lines="none" class="filter-item">
+        <ion-datetime-button datetime="filter-date"></ion-datetime-button>
+        <ion-popover [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime 
+              id="filter-date" 
+              presentation="date" 
+              [(ngModel)]="filters.date"
+              (ionChange)="onFilterChange()">
+            </ion-datetime>
+          </ng-template>
+        </ion-popover>
+      </ion-item>
+
+      <ion-item lines="none" class="filter-item">
+        <ion-select placeholder="All Doctors" [(ngModel)]="filters.doctorId" (ionChange)="onFilterChange()">
+          <ion-select-option value="">All Doctors</ion-select-option>
+          <ion-select-option *ngFor="let d of doctors" [value]="d.fullName">{{ d.fullName }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item lines="none" class="filter-item">
+        <ion-select placeholder="All Status" [(ngModel)]="filters.status" (ionChange)="onFilterChange()">
+          <ion-select-option [value]="undefined">All Status</ion-select-option>
+          <ion-select-option value="Pending">Pending</ion-select-option>
+          <ion-select-option value="Confirmed">Confirmed</ion-select-option>
+          <ion-select-option value="ProofSubmitted">Proof Submitted</ion-select-option>
+          <ion-select-option value="Completed">Completed</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="bookings-list ion-padding">
+    <!-- Skeleton -->
+    <div *ngIf="isLoading()">
+      <ion-item *ngFor="let i of [1,2,3,4,5,6]">
+        <ion-skeleton-text animated style="width: 100%; height: 60px;"></ion-skeleton-text>
+      </ion-item>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!isLoading() && bookings().length === 0">
+      <ion-icon name="search-outline" class="empty-state__icon"></ion-icon>
+      <h3 class="empty-state__title">No bookings found</h3>
+      <p class="empty-state__message">Adjust your filters to see more results.</p>
+    </div>
+
+    <!-- Data List -->
+    <ion-list *ngIf="!isLoading() && bookings().length > 0" class="dense-list">
+      <ion-item 
+        *ngFor="let b of bookings(); let i = index" 
+        button 
+        detail="false"
+        (click)="openBookingDetail(b)"
+        class="booking-item animate-in"
+        [style.animation-delay]="i * 30 + 'ms'">
+        
+        <div class="queue-col">
+          <span class="queue-num" *ngIf="b.queueNumber">#{{ b.queueNumber }}</span>
+          <span class="queue-placeholder" *ngIf="!b.queueNumber">-</span>
+        </div>
+
+        <div class="time-col">
+          <span class="start-time">{{ b.slotStartTime }}</span>
+        </div>
+
+        <div class="info-col">
+          <div class="patient-name">{{ b.patientName }}</div>
+          <div class="meta-row">
+            <span>{{ b.doctorName }}</span>
+            <span class="dot">·</span>
+            <span>{{ b.serviceName }}</span>
+          </div>
+        </div>
+
+        <div class="status-col">
+          <app-booking-status-badge [status]="b.status"></app-booking-status-badge>
+          <span class="badge payment-badge" [ngClass]="getPaymentBadgeClass(b.paymentStatus)">
+            {{ b.paymentStatus === 'Paid' ? '💰 Paid' : '💸 Unpaid' }}
+          </span>
+        </div>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

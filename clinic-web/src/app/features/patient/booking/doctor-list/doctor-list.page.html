@@ -1,0 +1,70 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="clinic-header">
+    <ion-title class="clinic-page-title">Find a Doctor</ion-title>
+  </ion-toolbar>
+  <ion-toolbar class="clinic-header">
+    <div class="filter-chips">
+      <ion-chip 
+        *ngFor="let spec of specializations()" 
+        [outline]="selectedSpec() !== spec"
+        [color]="selectedSpec() === spec ? 'primary' : 'medium'"
+        (click)="filterBySpec(spec)">
+        <ion-label>{{ spec }}</ion-label>
+      </ion-chip>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Skeleton -->
+  <div *ngIf="isLoading()">
+    <ion-card class="clinic-card" *ngFor="let i of [1,2,3]">
+      <div class="doctor-card-content">
+        <ion-skeleton-text animated style="width: 64px; height: 64px; border-radius: 50%;"></ion-skeleton-text>
+        <div style="flex: 1; padding-left: 16px;">
+          <ion-skeleton-text animated style="width: 60%; height: 20px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 40%; height: 14px; margin-top: 8px;"></ion-skeleton-text>
+        </div>
+      </div>
+    </ion-card>
+  </div>
+
+  <!-- Doctor Grid -->
+  <div class="doctor-grid" *ngIf="!isLoading()">
+    <ion-card 
+      class="clinic-card doctor-card animate-in" 
+      *ngFor="let doctor of filteredDoctors(); let i = index" 
+      [style.animation-delay]="i * 50 + 'ms'"
+      (click)="selectDoctor(doctor)">
+      
+      <div class="doctor-card-content">
+        <div class="avatar-wrapper">
+          <img *ngIf="doctor.profilePhotoUrl" [src]="doctor.profilePhotoUrl" />
+          <div *ngIf="!doctor.profilePhotoUrl" class="avatar-placeholder">
+            {{ getInitials(doctor.fullName) }}
+          </div>
+        </div>
+
+        <div class="doctor-info">
+          <div class="name-row">
+            <h2 class="doctor-name">{{ doctor.fullName }}</h2>
+            <div class="rating">
+              <ion-icon name="star" color="warning"></ion-icon>
+              <span>{{ doctor.averageRating }}</span>
+            </div>
+          </div>
+          <p class="specialization">{{ doctor.specialization }}</p>
+          <p class="fee">Consultation starts at ₱{{ doctor.consultationFee }}</p>
+        </div>
+        
+        <ion-icon name="chevron-forward-outline" class="forward-icon"></ion-icon>
+      </div>
+    </ion-card>
+  </div>
+
+  <div class="empty-state" *ngIf="!isLoading() && filteredDoctors().length === 0">
+    <ion-icon name="filter-outline" class="empty-state__icon"></ion-icon>
+    <h3 class="empty-state__title">No doctors found</h3>
+    <p class="empty-state__message">Try selecting a different specialization filter.</p>
+  </div>
+</ion-content>

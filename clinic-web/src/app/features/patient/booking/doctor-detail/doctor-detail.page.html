@@ -1,0 +1,118 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="clinic-header">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/book/doctors" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title class="clinic-page-title">{{ doctor()?.fullName || 'Doctor Detail' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="doctor-profile-section ion-padding" *ngIf="doctor()">
+    <div class="profile-header">
+      <div class="avatar-large">
+        <img *ngIf="doctor()?.profilePhotoUrl" [src]="doctor()?.profilePhotoUrl" />
+        <div *ngIf="!doctor()?.profilePhotoUrl" class="avatar-placeholder">
+          {{ getInitials(doctor()!.fullName) }}
+        </div>
+      </div>
+      <div class="profile-info">
+        <h2 class="doctor-name">{{ doctor()?.fullName }}</h2>
+        <p class="specialization">{{ doctor()?.specialization }}</p>
+        <div class="rating">
+          <ion-icon name="star" color="warning"></ion-icon>
+          <span>{{ doctor()?.averageRating }} Rating</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="doctor-bio" *ngIf="doctor()?.bio">
+      <p>{{ doctor()?.bio }}</p>
+    </div>
+
+    <div class="doctor-stats">
+      <div class="stat-item">
+        <span class="stat-label">Fee</span>
+        <span class="stat-value">₱{{ doctor()?.consultationFee }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Duration</span>
+        <span class="stat-value">{{ doctor()?.slotDurationMinutes }}m</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Running Late Banner -->
+  <ion-card color="warning" class="running-late-banner animate-in" *ngIf="doctor()?.runningLate">
+    <ion-card-content>
+      <div class="banner-content">
+        <ion-icon name="warning-outline"></ion-icon>
+        <p>Dr. {{ doctor()?.fullName }} is running approximately {{ doctor()?.estimatedDelayMinutes }} min behind schedule today.</p>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="booking-controls ion-padding">
+    <div class="control-header">
+      <h3 class="section-title">1. Select Date</h3>
+      <ion-datetime-button datetime="date-picker"></ion-datetime-button>
+    </div>
+
+    <ion-modal [keepContentsMounted]="true">
+      <ng-template>
+        <ion-datetime 
+          id="date-picker" 
+          presentation="date" 
+          [(ngModel)]="selectedDate"
+          [min]="minDate"
+          (ionChange)="onDateChange()">
+        </ion-datetime>
+      </ng-template>
+    </ion-modal>
+
+    <div class="service-selector" *ngIf="services().length > 1">
+      <h3 class="section-title">2. Choose Service</h3>
+      <ion-item lines="none" class="clinic-input-item">
+        <ion-select placeholder="Select a service" (ionChange)="onServiceChange($event)">
+          <ion-select-option *ngFor="let s of services()" [value]="s.id">
+            {{ s.name }} (₱{{ s.price }})
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </div>
+
+    <h3 class="section-title">3. Available Slots</h3>
+    <div class="slots-section">
+      <div *ngIf="isLoadingSlots()" class="ion-text-center ion-padding">
+        <ion-spinner color="primary"></ion-spinner>
+        <p>Loading slots...</p>
+      </div>
+
+      <app-slot-picker 
+        *ngIf="!isLoadingSlots()"
+        [slots]="slots()" 
+        [selectedSlot]="selectedSlot()"
+        (slotSelected)="onSlotSelected($event)">
+      </app-slot-picker>
+    </div>
+  </div>
+
+  <div style="height: 120px;"></div> <!-- Spacer for summary bar -->
+</ion-content>
+
+<!-- Summary Bar -->
+<ion-footer class="ion-no-border" *ngIf="summaryVisible()">
+  <div class="summary-bar animate-in">
+    <div class="summary-details">
+      <div class="summary-main">
+        {{ doctor()?.fullName }} · {{ selectedSlot()?.startTime }}
+      </div>
+      <div class="summary-sub">
+        {{ selectedService()?.name }} · ₱{{ selectedService()?.price }}
+      </div>
+    </div>
+    <ion-button fill="solid" (click)="proceedToBook()">
+      Next
+    </ion-button>
+  </div>
+</ion-footer>

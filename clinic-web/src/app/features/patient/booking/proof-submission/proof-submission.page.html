@@ -1,0 +1,81 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="clinic-header">
+    <ion-title class="clinic-page-title">Submit Payment</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="timer-card animate-in" [class.warning]="timeRemaining() < 120">
+    <ion-icon name="time-outline"></ion-icon>
+    <div class="timer-info">
+      <span>Time Remaining to Pay</span>
+      <h2 class="timer-value">{{ timeRemaining() | timerFormat }}</h2>
+    </div>
+  </div>
+
+  <div class="payment-instructions animate-in" style="animation-delay: 100ms">
+    <ion-card class="clinic-card payment-card">
+      <div class="gcash-header">
+        <img src="assets/icon/favicon.png" alt="GCash" style="width: 32px; height: 32px; filter: grayscale(1);" /> <!-- Placeholder icon -->
+        <h3>GCash Payment</h3>
+      </div>
+      
+      <div class="account-details">
+        <div class="detail-row">
+          <span class="label">Account Number</span>
+          <div class="value-row">
+            <span class="value">0917 123 4567</span>
+            <ion-button fill="clear" size="small" (click)="copyToClipboard('09171234567')">
+              <ion-icon name="copy-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+        <div class="detail-row">
+          <span class="label">Account Name</span>
+          <span class="value">Maliwanag Clinic</span>
+        </div>
+      </div>
+    </ion-card>
+  </div>
+
+  <div class="submission-form animate-in" style="animation-delay: 200ms">
+    <ion-segment [value]="submissionMode()" (ionChange)="onSegmentChange($event)">
+      <ion-segment-button value="reference">
+        <ion-label>Reference #</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="upload">
+        <ion-label>Upload Proof</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <div class="form-content">
+      <div *ngIf="submissionMode() === 'reference'" class="animate-in">
+        <ion-item lines="none" class="clinic-input-item">
+          <ion-label position="stacked">GCash Reference Number</ion-label>
+          <ion-input type="text" placeholder="13-digit number" [(ngModel)]="referenceNumber"></ion-input>
+        </ion-item>
+      </div>
+
+      <div *ngIf="submissionMode() === 'upload'" class="animate-in upload-container">
+        <div class="upload-box" (click)="fileInput.click()">
+          <ion-icon name="cloud-upload-outline" *ngIf="!selectedFile"></ion-icon>
+          <ion-icon name="checkmark-circle-outline" color="success" *ngIf="selectedFile"></ion-icon>
+          <p>{{ selectedFile ? selectedFile.name : 'Tap to upload screenshot' }}</p>
+          <input #fileInput type="file" (change)="onFileSelected($event)" style="display: none" accept="image/*" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ion-button 
+    expand="block" 
+    class="submit-btn animate-in" 
+    style="animation-delay: 300ms"
+    (click)="submitProof()">
+    Submit Proof of Payment
+  </ion-button>
+  
+  <p class="disclaimer ion-text-center animate-in" style="animation-delay: 400ms">
+    Your booking will be confirmed once our staff verifies your payment.
+  </p>
+</ion-content>

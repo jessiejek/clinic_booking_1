@@ -1,0 +1,91 @@
+:host {
+  --background: var(--clinic-surface);
+}
+
+.success-container {
+  max-width: 400px;
+  margin: var(--space-12) auto;
+  padding: var(--space-4);
+}
+
+.success-icon {
+  font-size: 80px;
+  color: var(--clinic-primary);
+  margin-bottom: var(--space-6);
+  
+  ion-icon {
+    filter: drop-shadow(0 4px 12px rgba(26, 107, 90, 0.2));
+  }
+}
+
+.success-title {
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  color: var(--clinic-gray-900);
+  margin: 0 0 var(--space-3) 0;
+}
+
+.success-message {
+  font-size: var(--text-base);
+  color: var(--clinic-gray-500);
+  margin-bottom: var(--space-8);
+  line-height: 1.6;
+}
+
+.queue-card {
+  background: var(--clinic-primary);
+  color: #FFFFFF;
+  padding: var(--space-6);
+  border-radius: 20px;
+  margin-bottom: var(--space-8);
+  box-shadow: 0 8px 24px rgba(26, 107, 90, 0.25);
+
+  .queue-label {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.9;
+  }
+
+  .queue-number {
+    margin: 4px 0 0 0;
+    font-size: 48px;
+    font-weight: 900;
+  }
+}
+
+.confirmation-details {
+  background: var(--clinic-gray-50);
+  border-radius: 16px;
+  padding: var(--space-6);
+  margin-bottom: var(--space-10);
+  text-align: left;
+
+  .detail-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+    &:last-child { margin-bottom: 0; }
+
+    ion-icon {
+      font-size: 20px;
+      color: var(--clinic-primary);
+    }
+
+    span {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--clinic-gray-700);
+    }
+  }
+}
+
+.action-buttons {
+  ion-button {
+    --border-radius: 12px;
+    height: 52px;
+    margin-bottom: var(--space-2);
+    font-weight: 700;
+  }
+}

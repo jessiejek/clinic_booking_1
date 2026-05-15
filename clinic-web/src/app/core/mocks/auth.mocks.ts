@@ -40,8 +40,8 @@ export const MOCK_USERS: Record<string, AuthUser> = {
 };
 
 export const MOCK_PASSWORDS: Record<string, string> = {
-  'admin@clinic.ph':     'Admin@123456',
-  'staff@clinic.ph':     'Staff@123456',
-  'dr.santos@clinic.ph': 'Doctor@123456',
-  'patient@clinic.ph':   'Patient@123456',
+  'admin@clinic.ph':     '123456',
+  'staff@clinic.ph':     '123456',
+  'dr.santos@clinic.ph': '123456',
+  'patient@clinic.ph':   '123456',
 };

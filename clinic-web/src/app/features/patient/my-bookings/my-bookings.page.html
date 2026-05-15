@@ -1,0 +1,87 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="clinic-header">
+    <ion-title class="clinic-page-title">My Bookings</ion-title>
+  </ion-toolbar>
+  <ion-toolbar class="clinic-header">
+    <ion-segment [value]="selectedSegment()" (ionChange)="onSegmentChange($event)">
+      <ion-segment-button value="upcoming">
+        <ion-label>Upcoming</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="past">
+        <ion-label>Past</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="loadBookings($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="booking-list ion-padding">
+    <!-- Loading State -->
+    <div *ngIf="isLoading()">
+      <ion-card class="clinic-card" *ngFor="let i of [1,2,3]">
+        <ion-skeleton-text animated style="width: 100%; height: 120px; border-radius: 12px;"></ion-skeleton-text>
+      </ion-card>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!isLoading() && filteredBookings.length === 0">
+      <ion-icon name="calendar-outline" class="empty-state__icon"></ion-icon>
+      <h3 class="empty-state__title">No {{ selectedSegment() }} appointments</h3>
+      <p class="empty-state__message">You haven't booked any appointments that fall into this category.</p>
+      <ion-button fill="solid" routerLink="/book/doctors" *ngIf="selectedSegment() === 'upcoming'">
+        Book Now
+      </ion-button>
+    </div>
+
+    <!-- Booking Cards -->
+    <ion-card 
+      class="clinic-card booking-card animate-in" 
+      *ngFor="let booking of filteredBookings; let i = index"
+      [style.animation-delay]="i * 50 + 'ms'">
+      <div class="card-header">
+        <div class="doctor-info">
+          <h2 class="doctor-name">{{ booking.doctorName }}</h2>
+          <p class="service-name">{{ booking.serviceName }}</p>
+        </div>
+        <app-booking-status-badge [status]="booking.status"></app-booking-status-badge>
+      </div>
+
+      <div class="card-body">
+        <div class="detail-item">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <span>{{ formatDate(booking.appointmentDate) }}</span>
+        </div>
+        <div class="detail-item">
+          <ion-icon name="time-outline"></ion-icon>
+          <span>{{ booking.slotStartTime }} - {{ booking.slotEndTime }}</span>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="meta-info">
+          <span class="queue" *ngIf="booking.queueNumber">Queue #{{ booking.queueNumber }}</span>
+          <span class="price">₱{{ booking.totalFee }} · {{ booking.paymentStatus }}</span>
+        </div>
+        <div class="actions">
+          <ion-button 
+            fill="clear" 
+            size="small" 
+            color="danger" 
+            *ngIf="booking.status === 'Pending' || booking.status === 'Confirmed'"
+            (click)="cancelBooking(booking)">
+            <ion-icon slot="start" name="close-circle-outline"></ion-icon>
+            Cancel
+          </ion-button>
+          <ion-button fill="clear" size="small" *ngIf="booking.paymentStatus === 'Paid'">
+            <ion-icon slot="start" name="receipt-outline"></ion-icon>
+            Receipt
+          </ion-button>
+        </div>
+      </div>
+    </ion-card>
+  </div>
+</ion-content>

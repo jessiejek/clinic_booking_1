@@ -1,0 +1,116 @@
+.walk-in-btn {
+  --background: #F59E0B;
+  --background-activated: #D97706;
+  --border-radius: 8px;
+  font-weight: 700;
+  height: 36px;
+}
+
+.filters-row {
+  display: flex;
+  gap: var(--space-2);
+  padding: 0 var(--space-4) var(--space-2);
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+.filter-item {
+  --background: var(--clinic-gray-50);
+  --border-radius: 8px;
+  --padding-start: 12px;
+  flex-shrink: 0;
+  min-width: 140px;
+  font-size: var(--text-xs);
+  height: 40px;
+
+  ion-select { width: 100%; }
+}
+
+.dense-list {
+  background: transparent;
+  padding: 0;
+}
+
+.booking-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  margin-bottom: var(--space-2);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--clinic-border);
+  --background: var(--clinic-surface);
+
+  &::part(native) {
+    padding: 12px;
+  }
+}
+
+.queue-col {
+  width: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-right: 1px solid var(--clinic-border);
+  margin-right: var(--space-3);
+
+  .queue-num {
+    font-size: var(--text-lg);
+    font-weight: 800;
+    color: var(--clinic-primary);
+  }
+
+  .queue-placeholder {
+    color: var(--clinic-gray-300);
+    font-size: var(--text-lg);
+  }
+}
+
+.time-col {
+  width: 60px;
+  margin-right: var(--space-3);
+  
+  .start-time {
+    font-size: var(--text-base);
+    font-weight: 700;
+    color: var(--clinic-gray-900);
+  }
+}
+
+.info-col {
+  flex: 1;
+
+  .patient-name {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--clinic-gray-900);
+  }
+
+  .meta-row {
+    font-size: var(--text-xs);
+    color: var(--clinic-gray-400);
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    .dot { font-size: 16px; line-height: 0; }
+  }
+}
+
+.status-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  min-width: 100px;
+
+  app-booking-status-badge { transform: scale(0.9); transform-origin: right; }
+}
+
+.payment-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}

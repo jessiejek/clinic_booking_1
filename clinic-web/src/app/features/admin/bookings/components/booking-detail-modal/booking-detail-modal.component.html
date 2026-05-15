@@ -1,0 +1,79 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Booking Details</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="detail-card">
+    <div class="status-row">
+      <app-booking-status-badge [status]="booking.status"></app-booking-status-badge>
+      <span class="queue-id" *ngIf="booking.queueNumber">#{{ booking.queueNumber }}</span>
+    </div>
+
+    <h2 class="patient-title">{{ booking.patientName }}</h2>
+    
+    <div class="info-grid">
+      <div class="info-item">
+        <label>Doctor</label>
+        <span>{{ booking.doctorName }}</span>
+      </div>
+      <div class="info-item">
+        <label>Service</label>
+        <span>{{ booking.serviceName }}</span>
+      </div>
+      <div class="info-item">
+        <label>Date</label>
+        <span>{{ booking.appointmentDate }}</span>
+      </div>
+      <div class="info-item">
+        <label>Time Slot</label>
+        <span>{{ booking.slotStartTime }} - {{ booking.slotEndTime }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="payment-card mt-4">
+    <h3>Payment Information</h3>
+    <div class="info-grid">
+      <div class="info-item">
+        <label>Mode</label>
+        <span>{{ booking.paymentMode }}</span>
+      </div>
+      <div class="info-item">
+        <label>Status</label>
+        <span [class.text-success]="booking.paymentStatus === 'Paid'">{{ booking.paymentStatus }}</span>
+      </div>
+      <div class="info-item">
+        <label>Amount</label>
+        <span>₱{{ booking.totalFee }}</span>
+      </div>
+      <div class="info-item" *ngIf="booking.orNumber">
+        <label>OR Number</label>
+        <span>{{ booking.orNumber }}</span>
+      </div>
+    </div>
+
+    <div class="proof-section" *ngIf="booking.status === 'ProofSubmitted'">
+      <label>Proof of Payment</label>
+      <div class="proof-placeholder">
+        <p>Reference: 1234567890123</p>
+        <ion-button fill="clear" size="small">View Screenshot</ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar class="ion-padding-horizontal ion-padding-bottom">
+    <ion-button expand="block" fill="solid" (click)="openActions()">
+      <ion-icon slot="start" name="ellipsis-vertical-outline"></ion-icon>
+      Manage Booking
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

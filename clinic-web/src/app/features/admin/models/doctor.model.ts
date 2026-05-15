@@ -14,6 +14,8 @@ export interface Doctor {
   status: 'Active' | 'Inactive' | 'OnLeave';
   services: Service[];
   averageRating: number;
+  runningLate?: boolean;
+  estimatedDelayMinutes?: number;
 }
 
 export interface DoctorSchedule {

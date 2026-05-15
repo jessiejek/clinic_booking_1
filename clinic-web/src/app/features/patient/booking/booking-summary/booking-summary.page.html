@@ -1,0 +1,92 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="clinic-header">
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/book/doctors/' + doctor()?.id" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title class="clinic-page-title">Booking Summary</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="summary-card animate-in">
+    <div class="summary-item">
+      <ion-icon name="person-outline"></ion-icon>
+      <div class="item-details">
+        <span class="label">Doctor</span>
+        <span class="value">{{ doctor()?.fullName }}</span>
+        <span class="sub-value">{{ doctor()?.specialization }}</span>
+      </div>
+    </div>
+
+    <div class="summary-item">
+      <ion-icon name="medical-outline"></ion-icon>
+      <div class="item-details">
+        <span class="label">Service</span>
+        <span class="value">{{ service()?.name }}</span>
+      </div>
+    </div>
+
+    <div class="summary-item">
+      <ion-icon name="calendar-outline"></ion-icon>
+      <div class="item-details">
+        <span class="label">Date</span>
+        <span class="value">{{ formatDate(date()) }}</span>
+      </div>
+    </div>
+
+    <div class="summary-item">
+      <ion-icon name="time-outline"></ion-icon>
+      <div class="item-details">
+        <span class="label">Time Slot</span>
+        <span class="value">{{ slot()?.startTime }} - {{ slot()?.endTime }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="payment-section animate-in" style="animation-delay: 100ms">
+    <h3 class="section-title">Payment Mode</h3>
+    
+    <div class="payment-options">
+      <div 
+        class="payment-option" 
+        [class.selected]="paymentMode() === 'Online'"
+        (click)="setPaymentMode('Online')">
+        <div class="option-header">
+          <ion-icon name="cash-outline"></ion-icon>
+          <span>Online Payment</span>
+        </div>
+        <p class="option-desc">Pay via GCash to confirm immediately</p>
+      </div>
+
+      <div 
+        class="payment-option" 
+        [class.selected]="paymentMode() === 'PayAtClinic'"
+        (click)="setPaymentMode('PayAtClinic')">
+        <div class="option-header">
+          <ion-icon name="medical-outline"></ion-icon>
+          <span>Pay at Clinic</span>
+        </div>
+        <p class="option-desc">Pay on arrival. Subject to availability.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="total-section animate-in" style="animation-delay: 200ms">
+    <div class="total-row">
+      <span>Subtotal</span>
+      <span>₱{{ service()?.price }}</span>
+    </div>
+    <div class="total-row grand-total">
+      <span>Grand Total</span>
+      <span>₱{{ service()?.price }}</span>
+    </div>
+  </div>
+
+  <ion-button 
+    expand="block" 
+    class="confirm-btn animate-in" 
+    style="animation-delay: 300ms"
+    (click)="confirmBooking()">
+    Book Appointment
+  </ion-button>
+</ion-content>

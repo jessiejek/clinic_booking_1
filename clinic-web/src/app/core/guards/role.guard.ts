@@ -8,6 +8,11 @@ export const roleGuard: CanActivateFn = (route) => {
   const router = inject(Router);
   const allowedRoles = route.data?.['roles'] as UserRole[];
 
+  // Ensure user is loaded from storage if needed
+  if (!store.isAuthenticated()) {
+    store.loadUserFromStorage();
+  }
+
   const user = store.user();
   if (user && allowedRoles.includes(user.role)) {
     return true;

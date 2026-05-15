@@ -15,7 +15,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     canActivate: [authGuard, roleGuard],
-    data: { roles: ['Admin'] },
+    data: { roles: ['Admin', 'Staff'] },
     loadChildren: () => import('./features/admin/admin.routes').then(m => m.ADMIN_ROUTES)
   },
   {
@@ -29,6 +29,11 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { roles: ['Doctor'] },
     loadChildren: () => import('./features/doctor/doctor.routes').then(m => m.DOCTOR_ROUTES)
+  },
+  {
+    path: 'book',
+    canActivate: [authGuard],
+    loadChildren: () => import('./features/patient/booking/booking.routes').then(m => m.BOOKING_ROUTES)
   },
   {
     path: 'portal',

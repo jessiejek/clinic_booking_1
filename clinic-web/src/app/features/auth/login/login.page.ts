@@ -29,7 +29,7 @@ export class LoginPage {
 
   loginForm = this.fb.group({
     email: ['admin@clinic.ph', [Validators.required, Validators.email]],
-    password: ['Admin@123456', [Validators.required]],
+    password: ['123456', [Validators.required]],
   });
 
   showPassword = false;

@@ -89,7 +89,7 @@ export const AuthStore = signalStore(
           router.navigate(['/admin/dashboard']);
           break;
         case 'Staff':
-          router.navigate(['/staff/dashboard']);
+          router.navigate(['/admin/dashboard']);
           break;
         case 'Doctor':
           router.navigate(['/doctor/dashboard']);

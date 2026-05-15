@@ -1,0 +1,111 @@
+.summary-card {
+  background: var(--clinic-surface);
+  border-radius: 16px;
+  padding: var(--space-6);
+  border: 1px solid var(--clinic-border);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.summary-item {
+  display: flex;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  
+  &:last-child { margin-bottom: 0; }
+
+  ion-icon {
+    font-size: 24px;
+    color: var(--clinic-primary);
+    background: rgba(26, 107, 90, 0.08);
+    padding: 10px;
+    border-radius: 12px;
+    flex-shrink: 0;
+  }
+
+  .item-details {
+    display: flex;
+    flex-direction: column;
+
+    .label { font-size: var(--text-xs); color: var(--clinic-gray-400); text-transform: uppercase; letter-spacing: 0.5px; }
+    .value { font-size: var(--text-base); font-weight: 700; color: var(--clinic-gray-900); margin-top: 2px; }
+    .sub-value { font-size: var(--text-sm); color: var(--clinic-gray-500); }
+  }
+}
+
+.section-title {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--clinic-gray-900);
+  margin: var(--space-6) 0 var(--space-4);
+}
+
+.payment-options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+
+  @media (min-width: 576px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.payment-option {
+  padding: var(--space-4);
+  border-radius: 12px;
+  border: 2px solid var(--clinic-border);
+  background: var(--clinic-surface);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &.selected {
+    border-color: var(--clinic-primary);
+    background: rgba(26, 107, 90, 0.03);
+    box-shadow: 0 4px 12px rgba(26, 107, 90, 0.1);
+  }
+
+  .option-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: 700;
+    color: var(--clinic-gray-900);
+    margin-bottom: 4px;
+    
+    ion-icon { font-size: 20px; color: var(--clinic-primary); }
+  }
+
+  .option-desc {
+    margin: 0;
+    font-size: var(--text-xs);
+    color: var(--clinic-gray-500);
+  }
+}
+
+.total-section {
+  margin-top: var(--space-8);
+  padding: var(--space-4) 0;
+  border-top: 1px dashed var(--clinic-border);
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+  color: var(--clinic-gray-600);
+  font-size: var(--text-sm);
+
+  &.grand-total {
+    margin-top: var(--space-2);
+    font-size: var(--text-lg);
+    font-weight: 800;
+    color: var(--clinic-gray-900);
+  }
+}
+
+.confirm-btn {
+  --border-radius: 12px;
+  height: 56px;
+  margin-top: var(--space-6);
+  font-weight: 700;
+  font-size: var(--text-base);
+}

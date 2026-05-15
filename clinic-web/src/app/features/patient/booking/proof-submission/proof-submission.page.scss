@@ -1,0 +1,109 @@
+.timer-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-6);
+  background: var(--clinic-surface);
+  border: 1px solid var(--clinic-border);
+  border-radius: 16px;
+  margin-bottom: var(--space-6);
+  transition: all 0.3s ease;
+
+  ion-icon {
+    font-size: 32px;
+    color: var(--clinic-primary);
+  }
+
+  &.warning {
+    border-color: var(--ion-color-danger);
+    background: #FFF5F5;
+    ion-icon { color: var(--ion-color-danger); }
+    .timer-value { color: var(--ion-color-danger); }
+  }
+
+  .timer-info {
+    span { font-size: var(--text-xs); color: var(--clinic-gray-400); text-transform: uppercase; }
+    .timer-value { margin: 0; font-size: var(--text-2xl); font-weight: 800; color: var(--clinic-gray-900); }
+  }
+}
+
+.payment-card {
+  margin: 0;
+  padding: var(--space-6);
+}
+
+.gcash-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  
+  h3 { margin: 0; font-size: var(--text-lg); font-weight: 700; color: var(--clinic-gray-900); }
+}
+
+.account-details {
+  .detail-row {
+    margin-bottom: var(--space-4);
+    &:last-child { margin-bottom: 0; }
+
+    .label { display: block; font-size: var(--text-xs); color: var(--clinic-gray-400); margin-bottom: 4px; }
+    .value { font-size: var(--text-lg); font-weight: 700; color: var(--clinic-gray-900); }
+    
+    .value-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      
+      ion-button { --padding-start: 0; --padding-end: 0; height: 24px; }
+    }
+  }
+}
+
+.submission-form {
+  margin-top: var(--space-8);
+
+  ion-segment {
+    background: var(--clinic-gray-50);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: var(--space-4);
+  }
+
+  .form-content {
+    min-height: 120px;
+  }
+}
+
+.upload-container {
+  padding: var(--space-2);
+}
+
+.upload-box {
+  border: 2px dashed var(--clinic-border);
+  border-radius: 16px;
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  background: rgba(26, 107, 90, 0.02);
+
+  ion-icon { font-size: 40px; color: var(--clinic-gray-300); }
+  p { margin: 0; font-size: var(--text-sm); color: var(--clinic-gray-500); }
+}
+
+.submit-btn {
+  --border-radius: 12px;
+  height: 56px;
+  margin-top: var(--space-8);
+  font-weight: 700;
+}
+
+.disclaimer {
+  font-size: var(--text-xs);
+  color: var(--clinic-gray-400);
+  margin-top: var(--space-4);
+  line-height: 1.5;
+}

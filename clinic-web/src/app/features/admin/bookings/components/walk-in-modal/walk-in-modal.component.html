@@ -1,0 +1,160 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="prevStep()" *ngIf="step() > 1">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>New Walk-In Booking</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-progress-bar [value]="step() / 3"></ion-progress-bar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Step 1: Patient Search -->
+  <div *ngIf="step() === 1" class="animate-in">
+    <h3 class="step-title">Step 1: Patient Information</h3>
+    
+    <div class="search-box">
+      <ion-item lines="none" class="clinic-input-item">
+        <ion-icon name="search-outline" slot="start"></ion-icon>
+        <ion-input 
+          placeholder="Search patient by name..." 
+          [(ngModel)]="searchQuery" 
+          (ionInput)="searchPatients()"
+          debounce="300">
+        </ion-input>
+      </ion-item>
+    </div>
+
+    <ion-list class="results-list" *ngIf="searchResults().length > 0">
+      <ion-item button *ngFor="let p of searchResults()" (click)="selectPatient(p)">
+        <ion-label>
+          <h2>{{ p.fullName }}</h2>
+          <p>{{ p.email }} · {{ p.phone }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
+    <div class="divider" *ngIf="!isGuest()">OR</div>
+
+    <ion-button 
+      expand="block" 
+      fill="outline" 
+      color="secondary" 
+      *ngIf="!isGuest()"
+      (click)="useGuest()">
+      <ion-icon slot="start" name="person-add-outline"></ion-icon>
+      Register as Guest
+    </ion-button>
+
+    <div class="guest-form animate-in" *ngIf="isGuest()">
+      <ion-item lines="none" class="clinic-input-item">
+        <ion-label position="stacked">Guest Full Name</ion-label>
+        <ion-input [(ngModel)]="guestName" placeholder="Full name"></ion-input>
+      </ion-item>
+      <ion-item lines="none" class="clinic-input-item mt-3">
+        <ion-label position="stacked">Contact Number</ion-label>
+        <ion-input [(ngModel)]="guestPhone" placeholder="09xx..."></ion-input>
+      </ion-item>
+      
+      <ion-button expand="block" class="mt-4" (click)="nextStep()">
+        Continue
+        <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Step 2: Slot Selection -->
+  <div *ngIf="step() === 2" class="animate-in">
+    <h3 class="step-title">Step 2: Doctor & Slot</h3>
+    
+    <ion-item lines="none" class="clinic-input-item">
+      <ion-label position="stacked">Select Doctor</ion-label>
+      <ion-select placeholder="Select Doctor" (ionChange)="onDoctorChange($event)">
+        <ion-select-option *ngFor="let d of doctors" [value]="d.id">{{ d.fullName }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <div class="date-row mt-3">
+      <ion-item lines="none" class="clinic-input-item" style="flex: 1;">
+        <ion-label position="stacked">Appointment Date</ion-label>
+        <ion-datetime-button datetime="walkin-date"></ion-datetime-button>
+      </ion-item>
+      <ion-popover [keepContentsMounted]="true">
+        <ng-template>
+          <ion-datetime 
+            id="walkin-date" 
+            presentation="date" 
+            [(ngModel)]="selectedDate"
+            (ionChange)="onDateChange()">
+          </ion-datetime>
+        </ng-template>
+      </ion-popover>
+    </div>
+
+    <div class="slots-container mt-4">
+      <div *ngIf="isLoadingSlots()" class="ion-text-center">
+        <ion-spinner color="primary"></ion-spinner>
+      </div>
+
+      <app-slot-picker 
+        *ngIf="!isLoadingSlots() && selectedDoctor()"
+        [slots]="slots()" 
+        [selectedSlot]="selectedSlot()"
+        (slotSelected)="onSlotSelected($event)">
+      </app-slot-picker>
+
+      <div class="empty-state" *ngIf="!selectedDoctor()">
+        <p>Please select a doctor first</p>
+      </div>
+    </div>
+
+    <ion-button expand="block" class="mt-4" (click)="nextStep()" [disabled]="!selectedSlot()">
+      Continue
+      <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
+    </ion-button>
+  </div>
+
+  <!-- Step 3: Payment -->
+  <div *ngIf="step() === 3" class="animate-in">
+    <h3 class="step-title">Step 3: Payment & Confirm</h3>
+    
+    <ion-list>
+      <ion-radio-group [(ngModel)]="paymentMode">
+        <ion-item lines="none" class="clinic-card payment-card-item">
+          <ion-label>
+            <h2>Pay at Clinic</h2>
+            <p>Patient will pay before consultation</p>
+          </ion-label>
+          <ion-radio slot="start" value="PayAtClinic"></ion-radio>
+        </ion-item>
+        
+        <ion-item lines="none" class="clinic-card payment-card-item mt-3">
+          <ion-label>
+            <h2>Already Paid Online</h2>
+            <p>Verification handled via mock</p>
+          </ion-label>
+          <ion-radio slot="start" value="Online"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-list>
+
+    <div class="summary-box mt-6">
+      <h3>Summary</h3>
+      <p>Patient: {{ isGuest() ? guestName : selectedPatient()?.fullName }}</p>
+      <p>Doctor: {{ selectedDoctor()?.fullName }}</p>
+      <p>Time: {{ selectedSlot()?.startTime }}</p>
+    </div>
+
+    <ion-button expand="block" class="mt-6" color="success" (click)="createWalkIn()">
+      <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
+      Confirm Walk-In
+    </ion-button>
+  </div>
+</ion-content>

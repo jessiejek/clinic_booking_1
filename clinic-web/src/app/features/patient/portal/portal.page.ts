@@ -2,11 +2,14 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { AuthStore } from '../../../core/stores/auth.store';
+import { RouterModule } from '@angular/router';
+import { addIcons } from 'ionicons';
+import { logOutOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-patient-portal',
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule, IonicModule, RouterModule],
   templateUrl: './portal.page.html',
   styleUrls: ['./portal.page.scss'],
 })
@@ -16,6 +19,10 @@ export class PortalPage {
   
   user = this.authStore.user;
   showBanner = signal(true);
+
+  constructor() {
+    addIcons({ logOutOutline });
+  }
 
   get firstName() {
     return this.user()?.fullName?.split(' ')[0] || 'User';
